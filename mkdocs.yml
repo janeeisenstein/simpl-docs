@@ -1,0 +1,32 @@
+site_name: Simpl Documentation
+markdown_extensions:
+  - toc
+  - admonition
+  - codehilite
+extra_css: [pygments.css]
+pages:
+  - index.md
+  - overview.md
+  - Getting Started:
+    - Running a Simpl Simulation: getting_started/index.md
+  - Tutorials:
+    - Single Player Example: tutorial/index.md
+    - Build the Simpl Games API service: tutorial/games-api.md
+    - Build the Single Player Model Service: tutorial/modelservice.md
+    - Build the Single Player Front End: tutorial/frontend.md
+  - Services:
+    - simpl-users: services/simpl-users/index.md
+    - Simpl-Games-API: services/Simpl-Games-API/index.md
+    - modelservice:
+      - Games:
+        - Scopes: services/modelservice/games.md
+        - Traversing Scopes: services/modelservice/traversing.md
+        - Scope Manager: services/modelservice/scopemanager.md
+        - Custom RunUser: services/modelservice/custom_runuser.md
+      - Running: services/modelservice/running.md
+      - Setting: services/modelservice/settings.md
+      - Simpl client: services/modelservice/simpl.md
+      - Webhooks: services/modelservice/webhooks.md
+    - simpl-react:
+      - Overview: services/simpl-react/overview.md
+      - Actions: services/simpl-react/actions/index.md
