@@ -411,8 +411,8 @@ class CalcPeriod(Period):
         for k in kwargs:
             self.session.log.info("step: Key: {}".format(k))
 
-        runuser = kwargs['user']
-        role = self.get_role(runuser.role)
+        user = kwargs['user']
+        role = self.get_role(user.runuser.role)
 
         self.add_new_decision(
             {"name": "decision",
