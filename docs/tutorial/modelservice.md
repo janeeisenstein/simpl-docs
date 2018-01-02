@@ -90,7 +90,7 @@ CALLBACK_URL = os.environ.get('CALLBACK_URL', 'http://{hostname}:{port}/callback
 
 SIMPL_GAMES_URL = os.environ.get('SIMPL_GAMES_URL', 'http://localhost:8100/apis')
 
-SIMPL_GAMES_AUTH = ('vagrant@simpl.world', 'vagrant')
+SIMPL_GAMES_AUTH = ('simpl@simpl.world', 'simpl')
 
 ROOT_TOPIC = 'world.simpl.sims.calc'
 ```
