@@ -19,7 +19,7 @@ $ mkvirtualenv calc-model
 Install Django
 
 ```bash
-$ pip install Django==1.9.12
+$ pip install Django==1.11.11
 ```
 
 Change to the projects folder:
@@ -33,32 +33,31 @@ Create a Django project folder and rename it to serve as a git repository
 ```bash
 $ django-admin startproject calc_model
 $ mv calc_model calc-model
-$ add2virtualenv /vagrant/projects/calc-model
 ```
 
 Change to the project folder:
 
 ```bash
 $ cd calc-model
+$ add2virtualenv .
 ```
 
 Create a `requirements.txt` file that installs the simpl-modelservice and unit testing apps:
 
 ```
 https://github.com:simplworld/simpl-modelservice/repository/archive.zip
-django-click==1.2.0
 
 # tests
 pytest==3.1.3
 pytest-cov==2.5.1
 pytest-django==3.1.2
-django-test-plus==1.0.18
+django-test-plus==1.0.22
 ```
 
 Install these requirements:
 
 ```bash
-$ pip install -r requirements.txt
+$ PIP_PROCESS_DEPENDENCY_LINKS=1 pip install -r requirements.txt
 ```
 
 Please note, if `DJANGO_SETTINGS_MODULE` is leftover from a previous session, you may need to unset it:
@@ -131,7 +130,10 @@ class Model(object):
         return operand + prev_total
 ```
 
-In your `game` app module, add a model unit test `tests/test_model.py`:
+
+Create a 'tests' folder in the `game` folder and add an empty `__init__.py` file.
+
+Add a model unit test `tests/test_model.py`:
 
 ```
 import pytest
@@ -183,7 +185,7 @@ Finally, create a `create_default_env.py` script in the 'commands' folder contai
 import djclick as click
 
 from modelservice.simpl import games_client
-from genericclient.exceptions import ResourceNotFound
+from modelservice.utils.asyncio import coro
 
 
 def echo(text, value):
@@ -192,20 +194,21 @@ def echo(text, value):
     )
 
 
-def delete_default_run():
+async def delete_default_run(api_session):
     """ Delete default Run """
     echo('Resetting the Calc game default run...', ' done')
-    game = games_client.games.get_or_create(slug='calc')
-    runs = games_client.runs.filter(game=game.id)
+    game = await api_session.games.get_or_create(slug='calc')
+    runs = await api_session.runs.filter(game=game.id)
     for run in runs:
         if run.name == 'default':
-            games_client.runs.delete(run.id)
+            await api_session.runs.delete(run.id)
 
 
 @click.command()
 @click.option('--reset', default=False, is_flag=True,
               help="Delete default game run and recreate it from scratch")
-def command(reset):
+@coro
+async def command(reset):
     """
     Create and initialize Calc game.
     Create a "default" Calc run.
@@ -214,41 +217,46 @@ def command(reset):
     Add 2 players ("s1", "s2") to the run.
     Add a scenario and period 1 for each player.
     """
-    # Handle resetting the game
-    if reset:
-        if click.confirm(
-                'Are you sure you want to delete the default game run and recreate from scratch?'):
-            delete_default_run()
 
-    # Create a Game
-    game = games_client.games.get_or_create(
-        name='Calc',
-        slug='calc'
-    )
-    echo('getting or creating game: ', game.name)
+    async with games_client as api_session:
 
-    # Create required Roles ("Calculator")
-    playerRole = games_client.roles.get_or_create(
-        game=game.id,
-        name='Calculator',
-    )
-    echo('getting or creating role: ', playerRole.name)
+        # Handle resetting the game
+        if reset:
+            if click.confirm(
+                    'Are you sure you want to delete the default game run and recreate from scratch?'):
+                await delete_default_run(api_session)
 
-    # Create game Phases ("Play")
-    playPhase = games_client.phases.get_or_create(
-        game=game.id,
-        name='Play',
-        order=1,
-    )
-    echo('getting or creating phase: ', playPhase.name)
+        # Create a Game
+        game = await api_session.games.get_or_create(
+            name='Calc',
+            slug='calc'
+        )
+        echo('getting or creating game: ', game.name)
 
-    # Add run with 2 players ready to play
-    add_run(game, 'default', 2, playerRole, playPhase)
+        # Create required Roles ("Calculator")
+        playerRole = await api_session.roles.get_or_create(
+            game=game.id,
+            name='Calculator',
+        )
+        echo('getting or creating role: ', playerRole.name)
+
+        # Create game Phases ("Play")
+        playPhase = await api_session.phases.get_or_create(
+            game=game.id,
+            name='Play',
+            order=1,
+        )
+        echo('getting or creating phase: ', playPhase.name)
+
+        # Add run with 2 players ready to play
+        run = await add_run(game, 'default', 2, playerRole, playPhase, api_session)
+
+        echo('Completed setting up run: id=', run.id)
 
 
-def add_run(game, run_name, user_count, role, phase):
+async def add_run(game, run_name, user_count, role, phase, api_session):
     # Create or get the Run
-    run = games_client.runs.get_or_create(
+    run = await api_session.runs.get_or_create(
         game=game.id,
         name=run_name,
     )
@@ -256,10 +264,10 @@ def add_run(game, run_name, user_count, role, phase):
 
     # Set run to phase
     run.phase = phase.id
-    run.save()
+    await run.save()
     echo('setting run to phase: ', phase.name)
 
-    fac_user = games_client.users.get_or_create(
+    fac_user = await api_session.users.get_or_create(
         password='leader',
         first_name='CALC',
         last_name='Leader',
@@ -267,7 +275,7 @@ def add_run(game, run_name, user_count, role, phase):
     )
     echo('getting or creating user: ', fac_user.email)
 
-    fac_runuser = games_client.runusers.get_or_create(
+    fac_runuser = await api_session.runusers.get_or_create(
         user=fac_user.id,
         run=run.id,
         leader=True,
@@ -277,17 +285,19 @@ def add_run(game, run_name, user_count, role, phase):
     for n in range(0, user_count):
         user_number = n + 1
         # Add player to run
-        add_player(user_number, run, role)
+        await add_player(user_number, run, role, api_session)
+
+    return run
 
 
-def add_player(user_number, run, role):
+async def add_player(user_number, run, role, api_session):
     """Add player with name based on user_number to run with role"""
 
     username = 's{0}'.format(user_number)
     first_name = 'Student{0}'.format(user_number)
     email = '{0}@calc.edu'.format(username)
 
-    user = games_client.users.get_or_create(
+    user = await api_session.users.get_or_create(
         password=username,
         first_name=first_name,
         last_name='User',
@@ -295,34 +305,34 @@ def add_player(user_number, run, role):
     )
     echo('getting or creating user: ', user.email)
 
-    runuser = games_client.runusers.get_or_create(
+    runuser = await api_session.runusers.get_or_create(
         user=user.id,
         run=run.id,
         role=role.id,
     )
     echo('getting or creating runuser for user: ', user.email)
 
-    add_runuser_scenario(runuser)
+    await add_runuser_scenario(runuser, api_session)
 
 
-def add_runuser_scenario(runuser):
+async def add_runuser_scenario(runuser, api_session):
     """Add a scenario named 'Scenario 1' to the runuser"""
 
-    scenario = games_client.scenarios.get_or_create(
+    scenario = await api_session.scenarios.get_or_create(
         runuser=runuser.id,
         name='Scenario 1',
     )
-    echo('getting or creating runuser {0} scenario: '.format(
-        runuser.id),
-        scenario.name)
+    click.echo('getting or creating runuser {} scenario: {}'.format(
+        runuser.id,
+        scenario.id))
 
-    period = games_client.periods.get_or_create(
+    period = await api_session.periods.get_or_create(
         scenario=scenario.id,
         order=1,
     )
-    echo('getting or creating runuser {0} period 1 for scenario: '.format(
-        runuser.id),
-        scenario.name)
+    click.echo('getting or creating runuser {} period 1 for scenario: {}'.format(
+        runuser.id,
+        scenario.id))
 
 ```
 
@@ -335,23 +345,34 @@ $ ./manage.py create_default_env
 
 Every player's move will be a `Decision` made in the current `Period`, the model will produce a `Result` for the current `Period`, and the `Scenario` will step to the next `Period`.
 
-In your `game` app module, create a file called `runmodel.py`. Add a step_scenario function that performs these functions:
+In your `game` app module, create a file called `runmodel.py`. Add `save_decision` and `step_scenario` functions that performs these functions:
 
 ```
 from modelservice.simpl import games_client
 from .model import Model
 
 
-def step_scenario(scenario_id, role_id):
+async def save_decision(period_id, role_id, decision):
+    # add decision to period
+    decision = await games_client.decisions.get_or_create(
+        period=period_id,
+        name='decision',
+        role=role_id,
+        data={"operand": decision}
+    )
+    return decision
+
+
+async def step_scenario(scenario_id, role_id):
     """
     Step the scenario's current period
     """
-    periods = games_client.periods.filter(scenario=scenario_id)
+    periods = await games_client.periods.filter(scenario=scenario_id)
     period_count = len(periods)
     period = periods[period_count - 1]
 
     operand = 0.0
-    period_decisions = games_client.decisions.filter(period=period.id)
+    period_decisions = await games_client.decisions.filter(period=period.id)
     if len(period_decisions) > 0:
         operand = float(period_decisions[0].data["operand"])
 
@@ -359,16 +380,16 @@ def step_scenario(scenario_id, role_id):
     if period_count > 1:
         prev_period = periods[period_count - 2]
         prev_period_results = \
-            games_client.results.filter(period=prev_period.id)
+            await games_client.results.filter(period=prev_period.id)
         if len(prev_period_results) > 0:
             prev_total = float(prev_period_results[0].data["total"])
 
     # step model
     model = Model()
     total = model.step(operand, prev_total)
-    data = {"total" : total}
+    data = {"total": total}
 
-    result = games_client.results.get_or_create(
+    result = await games_client.results.get_or_create(
         period=period.id,
         name='results',
         role=role_id,
@@ -377,11 +398,11 @@ def step_scenario(scenario_id, role_id):
 
     # prepare for next step by adding a new period
     next_period_order = period.order + 1
-    next_period = games_client.periods.get_or_create(
+    next_period = await games_client.periods.get_or_create(
         scenario=scenario_id,
         order=next_period_order,
     )
-    next_period.save()
+    await next_period.save()
 
     return next_period.id
 ```
@@ -392,14 +413,13 @@ In your `game` app module, create a file called `games.py` with the following co
 ```
 from modelservice.games import Period, Game
 from modelservice.games import subscribe, register
-from modelservice.games import ScopeNotFound
 
-from .runmodel import step_scenario
+from .runmodel import step_scenario, save_decision
 
 
 class CalcPeriod(Period):
     @subscribe
-    def submit_decision(self, operand, **kwargs):
+    async def submit_decision(self, operand, **kwargs):
         """
         Receives the operand played and stores as a ``Decision`` then
         steps the model saving the ``Result``. A new ``Period`` is added to
@@ -409,17 +429,18 @@ class CalcPeriod(Period):
         # "world.simpl.sims.calc.model.period.1.submit_decision"
 
         for k in kwargs:
-            self.session.log.info("step: Key: {}".format(k))
+            self.session.log.info("submit_decision: Key: {}".format(k))
 
         user = kwargs['user']
-        role = self.get_role(user.runuser.role)
+        runuser = self.game.get_scope('runuser', user.runuser.pk)
+        role = runuser.role
 
-        self.add_new_decision(
-            {"name": "decision",
-             "data": {"operand": operand},
-             "role": role.pk})
+        await save_decision(self.pk, role.pk, operand)
+        self.session.log.info("submit_decision: saved decision")
 
-        step_scenario(self.scenario.pk, role.pk)
+        await step_scenario(self.scenario.pk, role.pk)
+        self.session.log.info("submit_decision: stepped scenario")
+
 
 Game.register('calc', [
     CalcPeriod,

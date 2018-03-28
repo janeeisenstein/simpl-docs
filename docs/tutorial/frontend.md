@@ -84,17 +84,99 @@ Just like most Websites, the frontend service will need a place where it can sto
 First, let's create the necessary local tables:
 
 ```bash
-$ ./manage.py makemigrations
 $ ./manage.py migrate
 ```
 
-Then, start your frontend service with:
+The cookiecutter template `frontend/views.py`  assumes you are implementing a multi-player simulation.
+In a multi-player simulation, players are assigned to worlds with other players. The template views.py code subscribes to the
+worlds in each of the current user's runs. Player information is loaded into the simpl state as part of a world's information.
+
+We want Calc leaders to have access to information on all players in their runs. However, Calc players are not associated with
+a world. Consequently, we need to modify the `frontend/views.py` code to directly subscribe to the run's player information.
+
+In your `frontend/views.py` code, replace:
+
+```
+    async def init_user_scopes(self, simpl_id):
+        '''
+        Initialize set of runusers with which user is associated
+            -- should be one if non-leader.
+        Initialize set of worlds in which player user is a member
+            -- should be at most one if non-leader.
+        '''
+        worlds = set()
+        runusers = set()
+        is_leader = False
+
+        async with simpl_client as api_session:
+
+            game = await api_session.games.get(slug=settings.GAME_SLUG)
+            game_runs = await api_session.runs.filter(active=True,
+                                                      game=game.id)
+            user_runusers = await api_session.runusers.filter(user=simpl_id)
+
+            for run in game_runs:
+                for user_runuser in user_runusers:
+                    if user_runuser.run == run.id:
+                        runusers.add(user_runuser.id)
+
+                        if user_runuser.leader:
+                            is_leader = True
+                            run_worlds = \
+                                await api_session.worlds.filter(
+                                    run=user_runuser.run)
+                            worlds.update([w.id for w in run_worlds])
+                        else:
+                            if user_runuser.world:
+                                worlds.add(user_runuser.world)
+
+        return worlds, runusers, is_leader
+```
+
+with
+
+```
+    async def init_user_scopes(self, simpl_id):
+        '''
+        Initialize set of runusers with which user is associated
+            -- should be one if non-leader.
+        Initialize set of worlds in which player user is a member
+            -- should be at most one if non-leader.
+        '''
+        worlds = set()
+        runusers = set()
+        is_leader = False
+
+        async with simpl_client as api_session:
+
+            game = await api_session.games.get(slug=settings.GAME_SLUG)
+            game_runs = await api_session.runs.filter(active=True,
+                                                      game=game.id)
+            user_runusers = await api_session.runusers.filter(user=simpl_id)
+
+            for run in game_runs:
+                for user_runuser in user_runusers:
+                    if user_runuser.run == run.id:
+                        runusers.add(user_runuser.id)
+
+                        if user_runuser.leader:
+                            is_leader = True
+                            player_runusers = \
+                                await api_session.runusers.filter(run=run.id,
+                                                                  leader=False)
+                            runusers.update([p.id for p in player_runusers])
+
+        return worlds, runusers, is_leader
+```
+
+
+Start your frontend service with:
 
 ```bash
 $ ./manage.py runserver 0.0.0.0:8000
 ```
 
-In Chrome, head to `http://localhost:8000/` and login as 's1@calc.edu' with password 's1'.
+In Chrome, head to `http://localhost:8000/` and login as `s1@calc.edu` with password `s1`.
 Once you are logged in, you should see the 'Hello Player' message of the skeleton app.
 
 ![](./imgs/Hello_Player.png)
@@ -108,82 +190,9 @@ to see all the scope properties associated with the current user.
 This properties will be updated as the model service adds, removes or updates scopes.
 You will connect your components to the properties and they will update accordingly.
 
-Next, logout by going to `localhost:8000/logout/` in your browser. Then login as leader@calc.edu with password 'leader'.
+Next, logout by going to `localhost:8000/logout/` in your browser. Then login as `leader@calc.edu` with password `leader`.
 Once you are logged in, you should see the 'Hello Leader' message of the skeleton app. If you look at the `simpl`
-state properties, they look similar to those of players. Only information about the current user has been loaded.
-
-![](./imgs/Hello_Simpl_Leader1.png)
-
-The cookiecutter template `frontend/views.py`  assumes you are implementing a multi-player simulation.
-In a multi-player simulation, players are assigned to worlds with other players. The template views.py code subscribes to the
-worlds in each of the current user's runs. Player information is loaded into the simpl state as part of a world's information.
-
-We want Calc leaders to have access to information on all players in their runs. However, Calc players are not associated with
-a world. Consequently, we need to modify the `frontend/views.py` code to directly subscribe to the run's player information.
-
-In your `frontend/views.py` code, replace:
-
-```
-    def init_user_scopes(self, simpl_id, worlds):
-        '''
-        Initialize set of runusers with which user is associated
-         -- should be only one if non-leader.
-        Initialize set of worlds in which player user is a member
-         -- should be only one if non-leader.
-        '''
-        self.runusers = set()
-        self.is_leader = False
-
-        game = simpl_client.games.get(slug=settings.GAME_SLUG)
-        game_runs = simpl_client.runs.filter(active=True, game=game.id)
-        user_runusers = simpl_client.runusers.filter(user=simpl_id)
-
-        for run in game_runs:
-            for user_runuser in user_runusers:
-                if user_runuser.run == run.id:
-                    self.runusers.add(user_runuser.id)
-
-                    if user_runuser.leader:
-                        self.is_leader = True
-                        run_worlds = simpl_client.worlds.filter(
-                            run=user_runuser.run)
-                        worlds.update([w.id for w in run_worlds])
-                    else:
-                        if user_runuser.world:
-                            worlds.add(user_runuser.world)
-```
-
-with
-
-```
-    def init_user_scopes(self, simpl_id, worlds):
-        '''
-        Initialize set of runusers with which user is associated
-         -- should be only one if non-leader.
-        Initialize set of worlds in which player user is a member
-         -- should be only one if non-leader.
-        '''
-        self.runusers = set()
-        self.is_leader = False
-
-        game = simpl_client.games.get(slug=settings.GAME_SLUG)
-        game_runs = simpl_client.runs.filter(active=True, game=game.id)
-        user_runusers = simpl_client.runusers.filter(user=simpl_id)
-
-        for run in game_runs:
-            for user_runuser in user_runusers:
-                if user_runuser.run == run.id:
-                    self.runusers.add(user_runuser.id)
-
-                    if user_runuser.leader:
-                        self.is_leader = True
-                        player_runusers = simpl_client.runusers.filter(
-                            run=run.id,
-                            leader=False)
-                        self.runusers.update([p.id for p in player_runusers])
-```
-
-Refresh your Chrome browser page and you'll see all the run's runusers have been loaded into the `simpl` state.
+state properties, they look similar to those of players except all the run's runusers have been loaded into the `simpl` state.
 
 ![](./imgs/Hello_Simpl_Leader2.png)
 
@@ -203,9 +212,9 @@ import AutobahnReact from 'simpl/lib/autobahn';
 
 // submit player decision and advance to next period
 export const submitDecision =
-    createAction('SUBMIT_DECISION', (period, operand, ...args) =>
-        AutobahnReact.publish(`model:model.period.${period.id}.submit_decision`, [operand])
-    );
+  createAction('SUBMIT_DECISION', (period, operand, ...args) =>
+    AutobahnReact.publish(`model:model.period.${period.id}.submit_decision`, [operand])
+  );
 
 ```
 Note the action publishes to the topic because the calc-model `game/games.py `submit_decision` endpoint subscribes to the topic.
