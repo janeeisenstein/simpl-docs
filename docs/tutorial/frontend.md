@@ -176,7 +176,7 @@ Start your frontend service with:
 $ ./manage.py runserver 0.0.0.0:8000
 ```
 
-In Chrome, head to `http://localhost:8000/` and login as 's1@calc.edu' with password 's1'.
+In Chrome, head to `http://localhost:8000/` and login as `s1@calc.edu` with password `s1`.
 Once you are logged in, you should see the 'Hello Player' message of the skeleton app.
 
 ![](./imgs/Hello_Player.png)
@@ -190,7 +190,7 @@ to see all the scope properties associated with the current user.
 This properties will be updated as the model service adds, removes or updates scopes.
 You will connect your components to the properties and they will update accordingly.
 
-Next, logout by going to `localhost:8000/logout/` in your browser. Then login as leader@calc.edu with password 'leader'.
+Next, logout by going to `localhost:8000/logout/` in your browser. Then login as `leader@calc.edu` with password `leader`.
 Once you are logged in, you should see the 'Hello Leader' message of the skeleton app. If you look at the `simpl`
 state properties, they look similar to those of players except all the run's runusers have been loaded into the `simpl` state.
 
@@ -212,9 +212,9 @@ import AutobahnReact from 'simpl/lib/autobahn';
 
 // submit player decision and advance to next period
 export const submitDecision =
-    createAction('SUBMIT_DECISION', (period, operand, ...args) =>
-        AutobahnReact.publish(`model:model.period.${period.id}.submit_decision`, [operand])
-    );
+  createAction('SUBMIT_DECISION', (period, operand, ...args) =>
+    AutobahnReact.publish(`model:model.period.${period.id}.submit_decision`, [operand])
+  );
 
 ```
 Note the action publishes to the topic because the calc-model `game/games.py `submit_decision` endpoint subscribes to the topic.
