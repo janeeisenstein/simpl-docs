@@ -220,8 +220,8 @@ async def command(reset):
         # Handle resetting the game
         if reset:
             if click.confirm(
-                    'Are you sure you want to delete the default game run and recreate from scratch?'):
-                await delete_default_run()
+                'Are you sure you want to delete the default game run and recreate from scratch?'):
+                await delete_default_run(api_session)
 
         # Create a Game
         game = await api_session.games.get_or_create(
@@ -411,7 +411,6 @@ In your `game` app module, create a file called `games.py` with the following co
 ```
 from modelservice.games import Period, Game
 from modelservice.games import subscribe, register
-from modelservice.games import ScopeNotFound
 
 from .runmodel import step_scenario, save_decision
 
@@ -431,7 +430,8 @@ class CalcPeriod(Period):
             self.session.log.info("submit_decision: Key: {}".format(k))
 
         user = kwargs['user']
-        role = await self.get_role(user.runuser.role)
+        runuser = self.game.get_scope('runuser', user.runuser.pk)
+        role = runuser.role
 
         await save_decision(self.pk, role.pk, operand)
         self.session.log.info("submit_decision: saved decision")

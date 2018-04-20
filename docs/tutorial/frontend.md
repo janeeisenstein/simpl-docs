@@ -64,7 +64,7 @@ $ npm install
 $ gulp
 ```
 
-In order to aid development, you should also install the following Chrome DevTools Extensions:
+To aid development, you can install the following Chrome DevTools Extensions:
 
 * [Redux DevTools Extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
 * [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
@@ -84,7 +84,6 @@ Just like most Websites, the frontend service will need a place where it can sto
 First, let's create the necessary local tables:
 
 ```bash
-$ ./manage.py makemigrations
 $ ./manage.py migrate
 ```
 
@@ -114,73 +113,40 @@ state properties, they look similar to those of players. Only information about 
 
 ![](./imgs/Hello_Simpl_Leader1.png)
 
-The cookiecutter template `frontend/views.py`  assumes you are implementing a multi-player simulation.
-In a multi-player simulation, players are assigned to worlds with other players. The template views.py code subscribes to the
-worlds in each of the current user's runs. Player information is loaded into the simpl state as part of a world's information.
+In a multi-player simulation, players are assigned to a world with other players.
+The cookiecutter template assumes you are implementing a multi-player simulation in which players
+see only their own and their world's data. By default, leaders can see the worlds and users in their subscribed runs,
+but not the scenarios of other users. Consequently, the template `js/modules/Root.js` sets the simpl decorator's loadAllScenarios argument false to block access to scenarios of other users.
 
-We want Calc leaders to have access to information on all players in their runs. However, Calc players are not associated with
-a world. Consequently, we need to modify the `frontend/views.py` code to directly subscribe to the run's player information.
+We want Calc leaders to have access to all information on all players in their runs. Since Calc players are not associated with
+a world, we need to modify the template `js/modules/Root.js` code to load the run's player information.
 
-In your `frontend/views.py` code, replace:
+In your `js/modules/Root.js` code, change the simpl decorator's loadAllScenarios argument to LEADER:
 
 ```
-    def init_user_scopes(self, simpl_id, worlds):
-        '''
-        Initialize set of runusers with which user is associated
-         -- should be only one if non-leader.
-        Initialize set of worlds in which player user is a member
-         -- should be only one if non-leader.
-        '''
-        self.runusers = set()
-        self.is_leader = False
-
-        game = simpl_client.games.get(slug=settings.GAME_SLUG)
-        game_runs = simpl_client.runs.filter(active=True, game=game.id)
-        user_runusers = simpl_client.runusers.filter(user=simpl_id)
-
-        for run in game_runs:
-            for user_runuser in user_runusers:
-                if user_runuser.run == run.id:
-                    self.runusers.add(user_runuser.id)
-
-                    if user_runuser.leader:
-                        self.is_leader = True
-                        run_worlds = simpl_client.worlds.filter(
-                            run=user_runuser.run)
-                        worlds.update([w.id for w in run_worlds])
-                    else:
-                        if user_runuser.world:
-                            worlds.add(user_runuser.world)
+export default simpl({
+  authid: AUTHID,
+  password: 'nopassword',
+  url: `${MODEL_SERVICE}`,
+  progressComponent: Progress,
+  root_topic: ROOT_TOPIC,
+  topics: () => topics,
+  loadAllScenarios: false
+})(RootContainer);
 ```
 
 with
 
 ```
-    def init_user_scopes(self, simpl_id, worlds):
-        '''
-        Initialize set of runusers with which user is associated
-         -- should be only one if non-leader.
-        Initialize set of worlds in which player user is a member
-         -- should be only one if non-leader.
-        '''
-        self.runusers = set()
-        self.is_leader = False
-
-        game = simpl_client.games.get(slug=settings.GAME_SLUG)
-        game_runs = simpl_client.runs.filter(active=True, game=game.id)
-        user_runusers = simpl_client.runusers.filter(user=simpl_id)
-
-        for run in game_runs:
-            for user_runuser in user_runusers:
-                if user_runuser.run == run.id:
-                    self.runusers.add(user_runuser.id)
-
-                    if user_runuser.leader:
-                        self.is_leader = True
-                        player_runusers = simpl_client.runusers.filter(
-                            run=run.id,
-                            leader=False)
-                        self.runusers.update([p.id for p in player_runusers])
+export default simpl({
+  authid: AUTHID,
+  password: 'nopassword',
+  url: `${MODEL_SERVICE}`,
+  progressComponent: Progress,
+  root_topic: ROOT_TOPIC,
+  topics: () => topics,
+  loadAllScenarios: LEADER
+})(RootContainer);
 ```
 
 Refresh your Chrome browser page and you'll see all the run's runusers have been loaded into the `simpl` state.
@@ -449,7 +415,7 @@ function mapStateToProps(state, ownProps) {
     const periodOrder = _.last(periods).order;
 
     if (periodOrder > 1) { // pull total from last result
-      const lastPeriod = unsortedPeriods[periodOrder - 2];
+      const lastPeriod = periods[periodOrder - 2];
       periodsPlayed = lastPeriod.order;
 
       const lastResult = state.simpl.result.find(
@@ -484,6 +450,7 @@ import {connect} from 'react-redux';
 import PlayerResultRowContainer from '../containers/PlayerResultRowContainer'
 
 class LeaderHome extends React.Component {
+
   render() {
     const name = this.props.runuser.first_name + ' ' + this.props.runuser.last_name;
     const playerRows = this.props.players.map(
@@ -523,9 +490,10 @@ LeaderHome.propTypes = {
 function mapStateToProps(state) {
   const runuser = state.simpl.current_runuser;
 
-  const players = state.simpl.runuser.filter(
+  const unsortedPlayers = state.simpl.runuser.filter(
     (ru) => runuser.id !== ru.id
   );
+  const players = _.sortBy(unsortedPlayers, (p) => p.email);
 
   return {
     runuser,
@@ -539,6 +507,7 @@ const module = connect(
 )(LeaderHome);
 
 export default module;
+
 ```
 
 Now when a leader logs in, they see the current player results:
@@ -547,7 +516,7 @@ Now when a leader logs in, they see the current player results:
 
 Let's add some styling to make it easier to read the table of results.
 
-In `frontend/templates/frontend.home.html, replace
+In `frontend/templates/frontend.home.html`, replace
 ```
   <head>
   </head>
