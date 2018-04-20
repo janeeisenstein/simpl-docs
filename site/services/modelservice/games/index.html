@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Scopes - Simpl Documentation</title>
+        <link href="../../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../../css/highlight.css">
+        <link href="../../../pygments.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../..">Simpl Documentation</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="../../..">Welcome to Simpl</a>
+                    </li>
+                    <li >
+                        <a href="../../../overview/">Overview</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../../getting_started/">Running a Simpl Simulation</a>
+</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tutorials <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../../tutorial/">Single Player Example</a>
+</li>
+                            
+<li >
+    <a href="../../../tutorial/games-api/">Build the Simpl Games API service</a>
+</li>
+                            
+<li >
+    <a href="../../../tutorial/modelservice/">Build the Single Player Model Service</a>
+</li>
+                            
+<li >
+    <a href="../../../tutorial/frontend/">Build the Single Player Front End</a>
+</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../simpl-users/">simpl-users</a>
+</li>
+                            
+<li >
+    <a href="../../Simpl-Games-API/">Simpl-Games-API</a>
+</li>
+                            
+  <li class="dropdown-submenu">
+    <a href="#">modelservice</a>
+    <ul class="dropdown-menu">
+            
+  <li class="dropdown-submenu">
+    <a href="#">Games</a>
+    <ul class="dropdown-menu">
+            
+<li class="active">
+    <a href="./">Scopes</a>
+</li>
+            
+<li >
+    <a href="../traversing/">Traversing Scopes</a>
+</li>
+            
+<li >
+    <a href="../scopemanager/">Scope Manager</a>
+</li>
+            
+<li >
+    <a href="../custom_runuser/">Custom RunUser</a>
+</li>
+    </ul>
+  </li>
+            
+<li >
+    <a href="../running/">Running</a>
+</li>
+            
+<li >
+    <a href="../settings/">Setting</a>
+</li>
+            
+<li >
+    <a href="../simpl/">Simpl client</a>
+</li>
+            
+<li >
+    <a href="../webhooks/">Webhooks</a>
+</li>
+    </ul>
+  </li>
+                            
+  <li class="dropdown-submenu">
+    <a href="#">simpl-react</a>
+    <ul class="dropdown-menu">
+            
+<li >
+    <a href="../../simpl-react/overview/">Overview</a>
+</li>
+            
+<li >
+    <a href="../../simpl-react/actions/">Actions</a>
+</li>
+    </ul>
+  </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../../Simpl-Games-API/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../traversing/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#games">Games</a></li>
+            <li><a href="#scopes">Scopes</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="games">Games</h1>
+<h2 id="scopes">Scopes</h2>
+<p>Every game is defined by building what we call the <em>Scope tree</em>.</p>
+<p>The <em>Scope tree</em> starts at <code>Game</code>, and it's defined as follow:</p>
+<ul>
+<li><code>Game</code><ul>
+<li><code>Run</code><ul>
+<li><code>RunUser</code></li>
+<li><code>World</code><ul>
+<li><code>Scenario</code><ul>
+<li><code>Period</code><ul>
+<li><code>Decision</code></li>
+<li><code>Result</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The <code>modelservice.games</code> module provides all the base classes to build this tree. Each of this classes is considered a <em>Scope</em>. The logic of your game will be implemented by subclassing the necessary scope and adding your own custom logic.</p>
+<p>Your game is defined by registering your top-level Scope with the <code>modelservices.games.game</code> decorator.</p>
+<p>Inside any Scope, you can make any method callable from javascript by decorating it with the <code>modelservice.games.register</code> decorator. Similarly, you can use the <code>modelservice.games.subscribe</code> decorator to subscribe any method to a topic:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">modelservice.games</span> <span class="kn">import</span> <span class="n">Scope</span><span class="p">,</span> <span class="n">Game</span>
+<span class="kn">from</span> <span class="nn">modelservice.games</span> <span class="kn">import</span> <span class="n">register</span><span class="p">,</span> <span class="n">subscribe</span>
+
+
+<span class="k">class</span> <span class="nc">Scenario</span><span class="p">(</span><span class="n">Scope</span><span class="p">):</span>
+    <span class="n">resource_name</span> <span class="o">=</span> <span class="s1">&#39;scenario&#39;</span>
+    <span class="n">players</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@register</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term1</span><span class="p">,</span> <span class="n">term2</span><span class="p">,</span> <span class="n">details</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span>
+
+    <span class="nd">@subscribe</span>
+    <span class="k">def</span> <span class="nf">player_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">reason</span><span class="p">,</span> <span class="n">details</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">player</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+<span class="n">Game</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;zero-sum&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">Scenario</span><span class="p">])</span>
+</pre></div>
+
+
+<p>In this example, <code>Scenario.add</code> will be registered by default at the uri <code>{settings.ROOT_URI}.models.{resource_name}.{scope_pk}.add</code>, and <code>Scenario.player_quit</code> will subscribe to <code>{settings.ROOT_URI}.models.resource_name}.{scope_pk}.player_quit</code>.</p>
+<p>The name that will be used for the function can be passed to the decorator:</p>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Scenario</span><span class="p">(</span><span class="n">Scope</span><span class="p">):</span>
+    <span class="n">resource_name</span> <span class="o">=</span> <span class="s1">&#39;scenario&#39;</span>
+
+    <span class="nd">@subscribe</span><span class="p">(</span><span class="s1">&#39;player.quit&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">player_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">player</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+<span class="n">Game</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;zero-sum&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">Scenario</span><span class="p">])</span>
+</pre></div>
+
+
+<p><code>Scenario.player_quit</code> will now be subscribed to <code>{settings.ROOT_URI}.models.{resource_name}.{scope_pk}.player.quit</code>.</p>
+<p>Further customization can be achieved by overriding the <code>Scope.get_routing(name)</code> method.</p>
+<h3 id="scope-methods">Scope methods</h3>
+<p>All <em>Scopes</em> inherits from a common <code>Scope</code> subclass and share these common methods:</p>
+<ul>
+<li><code>.get_routing(name)</code>: given a topic short name, returns the full topic path. This is to avoid repeating the same topic namespace over and over, and to allow to use shorter topic names.</li>
+<li><code>.publish(topic, *args, **kwargs)</code>: Publishes a message on the specified <code>topic</code>. The actual topic name will be what is returned by <code>.get_routing(topic)</code> </li>
+<li><code>.save()</code>: Persist the scope by submitting it to the <code>Simpl-Games-API</code> service.</li>
+<li><code>.add_new_child_scope(json)</code></li>
+<li><code>.get_role(role_id)</code>: Give a role id, returns a full-fledged <code>Resource</code> object representing the role.</li>
+<li><code>.get_scope()</code>: Registered procedure at <code>{scope.topic}.get_scope</code> returning the scope's serialized version. Call this procedure if you want to retrieve the scope's state from the UI</li>
+<li><code>.get_scope_tree()</code>: Same as <code>.get_scope</code>, but will also walk down the tree from scope, returning its children recursively.</li>
+<li><code>.onConnected()</code></li>
+<li><code>.onStop()</code></li>
+<li><code>.onStart()</code></li>
+</ul>
+<h3 id="scope-properties">Scope properties</h3>
+<p>All <em>Scopes</em> inherits from a common <code>Scope</code> subclass and share these common properties:</p>
+<ul>
+<li><code>.pk</code></li>
+<li><code>.json</code>: A <code>dict</code> that contains the serialized representation of the scope. This is what will be passed to the browser and to the Simpl-Games-API service. Any user-defined state for the scope should be stored in <code>.json['data']</code></li>
+<li><code>.child_scopes</code>: A <a href="../scopemanager/"><code>ScopeManager</code></a> of the children scope.</li>
+<li><code>.games_client</code>: An instance of a REST API client for the Simpl-Games service.</li>
+<li><code>.my</code>: This special property will contain scopes that are related to the scope. See <a href="../traversing/">Traversing Scopes</a> for more details.</li>
+<li><code>.log</code>: a <code>txaio</code> logging instance. See "Logging" below.</li>
+<li><code>.runuser_class</code>: Scope class to use for RunUsers. Override this to provide your <a href="../custom_runuser/">Custom RunUser</a>. Defaults to <code>modelservices.games.RunUser</code>. Note: this only aplies to your top-level scope.</li>
+</ul>
+<h3 id="logging">Logging</h3>
+<p>To log from a <code>Scope</code>, you can use the <code>.log</code> attribute.</p>
+<p>The best practice is to use a string with the <code>r</code> formatting operator for your variables. For example, if you'd want to log the <code>somevar</code> variable to the <code>INFO</code> level, you'd use:</p>
+<div class="codehilite"><pre><span></span>myscope.log.info(&quot;Something happened: {myvar!r}&quot;, myvar=somevar)
+</pre></div>
+
+
+<h3 id="concrete-classes">Concrete Classes</h3>
+<p>For convenience, the following scopes are already defined in <code>modelservices.games</code>:</p>
+<ul>
+<li><code>modelservices.games.Game</code></li>
+<li><code>modelservices.games.Run</code></li>
+<li><code>modelservices.games.World</code></li>
+<li><code>modelservices.games.RunUser</code></li>
+<li><code>modelservices.games.Scenario</code></li>
+<li><code>modelservices.games.Period</code></li>
+<li><code>modelservices.games.Decision</code></li>
+<li><code>modelservices.games.Result</code></li>
+</ul>
+<h4 id="modelservicesgamesgame">modelservices.games.Game</h4>
+<p>In addition to the methods inherited from <code>Scope</code>, <code>Game</code> has the following methods:</p>
+<ul>
+<li><code>.get_phases()</code>: Registered procedure to fetch the game's phases over WAMP.</li>
+</ul>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>Game</code> has the following properties:</p>
+<ul>
+<li><code>.phases</code>: A list of the game's <code>Phase</code>s.</li>
+</ul>
+<h4 id="modelservicesgamesrun">modelservices.games.Run</h4>
+<p>In addition to the methods inherited from <code>Scope</code>, <code>Run</code> has the following methods:</p>
+<ul>
+<li><code>.advance_phase()</code>: Subscribed method to make the <code>Run</code> advance to the next phase.</li>
+<li><code>.on_advance_phase(next_phase)</code>: Override this method to perform custom logic right before the run is advanced to the next phase. Raise <code>Run.ChangePhaseException</code> to prevent the run from being advanced.</li>
+<li>
+<p><code>.rollback_phase()</code>: Subscribed method to make the <code>Run</code> rollback to the previous phase.</p>
+</li>
+<li>
+<p><code>.on_rollback_phase(previous_phase)</code>: Override this method to perform custom logic right before the run is rolled back to the previous phase. Raise <code>Run.ChangePhaseException</code> to prevent the run from being rolled back.</p>
+</li>
+</ul>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>Run</code> has the following properties:</p>
+<ul>
+<li><code>.current_phase</code>: The current Run's phase.</li>
+<li><code>.worlds</code>: A list of <code>World</code>s within this <code>Run</code></li>
+<li><code>.ChangePhaseException</code>: Exception subclass to prevent the run from being changed.</li>
+</ul>
+<h4 id="modelservicesgamesrunuser">modelservices.games.RunUser</h4>
+<p>In addition to the methods inherited from <code>Scope</code>, <code>RunUser</code> has the following methods:</p>
+<ul>
+<li><code>.get_scenarios()</code>: Registered procedure to fetch the RunUser's Scenarios over WAMP.</li>
+<li><code>.add_scenario(name, payload)</code>: Subscriber that will add a new Scenario for the RunUser.</li>
+</ul>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>Run</code> has the following properties:</p>
+<ul>
+<li><code>.scenarios</code>: A list of the RunUser's <code>Scenarios</code>s.</li>
+</ul>
+<h4 id="modelservicesgamesscenario">modelservices.games.Scenario</h4>
+<p>In addition to the methods inherited from <code>Scope</code>, <code>Scenario</code> has the following methods:</p>
+<ul>
+<li><code>.advance()</code>: Stops the current period, and adds a new one.</li>
+<li><code>.add_new_period(json)</code>: alias of <code>.add_new_child_scope</code></li>
+</ul>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>Scenario</code> has the following properties:</p>
+<ul>
+<li><code>.periods</code>: alias of <code>.child_scopes.all()</code></li>
+<li><code>.current_period</code>: returns the current period, defined as the last one created. Returns <code>None</code> if the scenario doesn't have any periods, yet.</li>
+<li><code>.world</code>: alias of <code>.my.parent</code></li>
+</ul>
+<h4 id="modelservicesgamesperiod">modelservices.games.Period</h4>
+<p>In addition to the methods inherited from <code>Scope</code>, <code>Period</code> has the following methods:</p>
+<ul>
+<li><code>.add_new_decision(json)</code></li>
+<li><code>.add_new_result(json)</code></li>
+</ul>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>Period</code> has the following properties:</p>
+<ul>
+<li><code>.decisions</code></li>
+<li><code>.results</code></li>
+<li><code>.scenario</code>: alias of <code>.my.parent</code></li>
+</ul>
+<h4 id="modelservicesgamesdecision">modelservices.games.Decision</h4>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>Decision</code> has the following properties:</p>
+<ul>
+<li><code>.period</code>: alias of <code>.my.parent</code></li>
+</ul>
+<h4 id="modelservicesgamesresult">modelservices.games.Result</h4>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>Result</code> has the following properties:</p>
+<ul>
+<li><code>.period</code>: alias of <code>.my.parent</code></li>
+</ul></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '../../..';</script>
+        <script src="../../../js/base.js"></script>
+        <script src="../../../search/require.js"></script>
+        <script src="../../../search/search.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>&larr;</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>&rarr;</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </body>
+</html>
