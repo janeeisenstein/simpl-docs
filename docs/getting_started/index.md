@@ -33,8 +33,8 @@ Connect to the Vagrant environment and install simpl-games-api:
 ```
 vagrant ssh
 mkvirtualenv simpl-games-api
-add2virtualenv /vagrant/projects/simpl-games-api
 cd projects/simpl-games-api
+add2virtualenv .
 pip install -r requirements.txt
 ```
 
@@ -49,7 +49,7 @@ createdb simpl
 Start the simpl-games-api web server:
 
 ```
-./manage.py runserver 0.0.0.0:8100
+./manage.py run_gunicorn 0.0.0.0:8100
 ```
 
 
@@ -67,9 +67,9 @@ Connect to Vagrant environment and install the simpl-calc Model Service:
 ```
 vagrant ssh
 mkvirtualenv simpl-calc-model
-add2virtualenv /vagrant/projects/simpl-calc-model
 cd projects/simpl-calc-model
-pip install -r requirements.txt
+add2virtualenv .
+PIP_PROCESS_DEPENDENCY_LINKS=1 pip install -r requirements.txt
 ```
 
 Add the simp-calc game to the Simpl database along with some test users:
@@ -101,10 +101,9 @@ Connect to Vagrant environment and install the simpl-calc Front End
 ```
 vagrant ssh
 mkvirtualenv simpl-calc-ui
-add2virtualenv /vagrant/projects/simpl-calc-ui
 cd projects/simpl-calc-ui
+add2virtualenv .
 pip install -r requirements.txt
-./manage.py makemigrations
 ./manage.py migrate
 ```
 
@@ -116,14 +115,18 @@ Start your frontend webserver with:
 
 Install gulp and/or webpack globally outside Vagrant to ensure they are on your PATH
 
+```
 sudo npm install --global webpack
 sudo npm install --global gulp
+```
 
 In a separate terminal, update node_modules and run Gulp to compile JS and SASS
 
+```
 cd to simpl-calc-ui directory
 npm install
 gulp
+```
 
 ## Using the Simpl Calc Simulation
 

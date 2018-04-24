@@ -119,9 +119,9 @@ see only their own and their world's data. By default, leaders can see the world
 but not the scenarios of other users. Consequently, the template `js/modules/Root.js` sets the simpl decorator's loadAllScenarios argument false to block access to scenarios of other users.
 
 We want Calc leaders to have access to all information on all players in their runs. Since Calc players are not associated with
-a world, we need to modify the template `js/modules/Root.js` code to load the run's player information.
+a world, we need to modify the template `js/modules/Root.js` code to load all player scenarios for leaders.
 
-In your `js/modules/Root.js` code, change the simpl decorator's loadAllScenarios argument to LEADER:
+In your `js/modules/Root.js`:
 
 ```
 export default simpl({
@@ -135,7 +135,7 @@ export default simpl({
 })(RootContainer);
 ```
 
-with
+change the simpl decorator's loadAllScenarios argument to LEADER:
 
 ```
 export default simpl({

@@ -22,7 +22,6 @@ pages:
         - Scopes: services/modelservice/games.md
         - Traversing Scopes: services/modelservice/traversing.md
         - Scope Manager: services/modelservice/scopemanager.md
-        - Custom RunUser: services/modelservice/custom_runuser.md
       - Running: services/modelservice/running.md
       - Setting: services/modelservice/settings.md
       - Simpl client: services/modelservice/simpl.md
