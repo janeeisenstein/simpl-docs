@@ -43,7 +43,7 @@ Create a Simpl database:
 ```
 createdb simpl
 ./manage.py migrate
-./manage.py create_vagrant_user
+./manage.py create_simpl_user
 ```
 
 Start the simpl-games-api web server:
