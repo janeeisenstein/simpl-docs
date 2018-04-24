@@ -7,15 +7,17 @@ interface with the Simpl-Games-API service.
 ```
 from modelservice.simpl import games_client
 
-users = await games_client.users.all()
+async with games_client as api_session:
 
-world_users = await games_client.users.filter(world=35)
+    users = await api_session.users.all()
 
-user = await games_client.users.get(email='myuser@example.com')
+    world_users = await api_session.users.filter(world=35)
 
-user.first_name = 'Jessie'
+    user = await api_session.users.get(email='myuser@example.com')
 
-await user.save()
+    user.first_name = 'Jessie'
+
+    await user.save()
 
 ```
 
