@@ -19,7 +19,7 @@ $ mkvirtualenv calc-model
 Install Django
 
 ```bash
-$ pip install Django==1.11.6
+$ pip install Django==1.11.11
 ```
 
 Change to the projects folder:
@@ -194,8 +194,7 @@ def echo(text, value):
 async def delete_default_run(api_session):
     """ Delete default Run """
     echo('Resetting the Calc game default run...', ' done')
-    game = await api_session.games.get_or_create(slug='calc')
-    runs = await api_session.runs.filter(game=game.id)
+    runs = await api_session.runs.filter(game_slug='calc')
     for run in runs:
         if run.name == 'default':
             await api_session.runs.delete(run.id)
@@ -220,7 +219,7 @@ async def command(reset):
         # Handle resetting the game
         if reset:
             if click.confirm(
-                'Are you sure you want to delete the default game run and recreate from scratch?'):
+                    'Are you sure you want to delete the default game run and recreate from scratch?'):
                 await delete_default_run(api_session)
 
         # Create a Game
@@ -231,22 +230,22 @@ async def command(reset):
         echo('getting or creating game: ', game.name)
 
         # Create required Roles ("Calculator")
-        playerRole = await api_session.roles.get_or_create(
+        player_role = await api_session.roles.get_or_create(
             game=game.id,
             name='Calculator',
         )
-        echo('getting or creating role: ', playerRole.name)
+        echo('getting or creating role: ', player_role.name)
 
         # Create game Phases ("Play")
-        playPhase = await api_session.phases.get_or_create(
+        play_phase = await api_session.phases.get_or_create(
             game=game.id,
             name='Play',
             order=1,
         )
-        echo('getting or creating phase: ', playPhase.name)
+        echo('getting or creating phase: ', play_phase.name)
 
         # Add run with 2 players ready to play
-        run = await add_run(game, 'default', 2, playerRole, playPhase, api_session)
+        run = await add_run(game, 'default', 2, player_role, play_phase, api_session)
 
         echo('Completed setting up run: id=', run.id)
 
