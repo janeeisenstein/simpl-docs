@@ -113,10 +113,6 @@
 <li >
     <a href="../../services/modelservice/scopemanager/">Scope Manager</a>
 </li>
-            
-<li >
-    <a href="../../services/modelservice/custom_runuser/">Custom RunUser</a>
-</li>
     </ul>
   </li>
             
@@ -289,8 +285,8 @@ The cookiecutter template assumes you are implementing a multi-player simulation
 see only their own and their world's data. By default, leaders can see the worlds and users in their subscribed runs,
 but not the scenarios of other users. Consequently, the template <code>js/modules/Root.js</code> sets the simpl decorator's loadAllScenarios argument false to block access to scenarios of other users.</p>
 <p>We want Calc leaders to have access to all information on all players in their runs. Since Calc players are not associated with
-a world, we need to modify the template <code>js/modules/Root.js</code> code to load the run's player information.</p>
-<p>In your <code>js/modules/Root.js</code> code, change the simpl decorator's loadAllScenarios argument to LEADER:</p>
+a world, we need to modify the template <code>js/modules/Root.js</code> code to load all player scenarios for leaders.</p>
+<p>In your <code>js/modules/Root.js</code>:</p>
 <div class="codehilite"><pre><span></span>export default simpl({
   authid: AUTHID,
   password: &#39;nopassword&#39;,
@@ -303,7 +299,7 @@ a world, we need to modify the template <code>js/modules/Root.js</code> code to 
 </pre></div>
 
 
-<p>with</p>
+<p>change the simpl decorator's loadAllScenarios argument to LEADER:</p>
 <div class="codehilite"><pre><span></span>export default simpl({
   authid: AUTHID,
   password: &#39;nopassword&#39;,

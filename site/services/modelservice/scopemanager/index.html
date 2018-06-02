@@ -113,10 +113,6 @@
 <li class="active">
     <a href="./">Scope Manager</a>
 </li>
-            
-<li >
-    <a href="../custom_runuser/">Custom RunUser</a>
-</li>
     </ul>
   </li>
             
@@ -167,7 +163,7 @@
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../custom_runuser/">
+                        <a rel="prev" href="../running/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -187,31 +183,26 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="scopemanager">ScopeManager</h1>
-<p>Collection of scopes are usually returned as ScopeManager.</p>
-<p>A <code>ScopeManager</code> behaves like a list (ie: you can iterate on them, use the <code>in</code> operator), and allows you to operate on collections of scopes.</p>
+<p>Collection of scopes are usually returned as a ScopeManager.</p>
+<p>A <code>ScopeManager</code> behaves like a list (ie: you can iterate on them, use the <code>in</code> operator),
+and allows you to operate on collections of scopes. However, there is no particular ordering to a ScopeManager's scopes.</p>
 <h2 id="filtering">Filtering</h2>
 <p><code>ScopeManager.filter(**kwargs)</code> will return a new <code>ScopeManager</code> with only the scopes that match the conditions.</p>
-<p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="n">runusers</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># returns only scopes that have `.json[&#39;world&#39;]` set to `3`.</span>
+<p>To retrieve Runuser scopes that have <code>.json['world']</code> set to <code>3</code> for example use:</p>
+<div class="codehilite"><pre><span></span><span class="n">runusers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">scopes</span><span class="p">[</span><span class="s1">&#39;runuser&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 
-<p><code>ScopeManager.resource_name(resource_name)</code> will return only the scopes of type <code>resource_name</code>.</p>
-<p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="n">period</span><span class="o">.</span><span class="n">child_scopes</span><span class="o">.</span><span class="n">resource_name</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">)</span>
-</pre></div>
-
-
-<p><code>ScopeManager.for_user(user)</code> will return only the subset of scopes that a specific user (not to be confused with <code>RunUser</code>) as access to through their <code>RunUser</code>s.</p>
+<p><code>ScopeManager.for_user(user)</code> will return only the subset of scopes that a specific user
+(not to be confused with <code>RunUser</code>) has access to through their <code>RunUser</code>s.</p>
 <p>Similar to <code>.filter</code>, <code>.get(**kwargs)</code> will retrieve only one scope matching the conditions.</p>
-<p>If no one scope cane found, <code>ScopeManager.ScopeNotFound</code> will be raised.</p>
+<p>If no scope can found, <code>ScopeManager.ScopeNotFound</code> will be raised.</p>
 <p>If more than one scope is found, <code>ScopeManager.MultipleScopesFound</code> will be raised.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="n">myscopes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># return a scopes that have `.json[&#39;world&#39;]` set to `3`.</span>
+<div class="codehilite"><pre><span></span><span class="n">myscopes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># return a scopes that has `.json[&#39;world&#39;]` set to `3`.</span>
 </pre></div>
 
 
-<p>You can get the last scope of a manager with the <code>.last()</code> method.</p>
 <p><code>.count()</code> will return the number of scopes in the manager.</p>
 <h2 id="editing">Editing</h2>
 <p>Just like list, <code>ScopeManagers</code> can be combined using the <code>+</code> operator:</p>

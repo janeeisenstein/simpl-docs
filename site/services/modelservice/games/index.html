@@ -113,10 +113,6 @@
 <li >
     <a href="../scopemanager/">Scope Manager</a>
 </li>
-            
-<li >
-    <a href="../custom_runuser/">Custom RunUser</a>
-</li>
     </ul>
   </li>
             
@@ -191,6 +187,8 @@
 <p>The <em>Scope tree</em> starts at <code>Game</code>, and it's defined as follow:</p>
 <ul>
 <li><code>Game</code><ul>
+<li><code>Phase</code></li>
+<li><code>Role</code></li>
 <li><code>Run</code><ul>
 <li><code>RunUser</code></li>
 <li><code>World</code><ul>
@@ -211,13 +209,13 @@
 </ul>
 <p>The <code>modelservice.games</code> module provides all the base classes to build this tree. Each of this classes is considered a <em>Scope</em>. The logic of your game will be implemented by subclassing the necessary scope and adding your own custom logic.</p>
 <p>Your game is defined by registering your top-level Scope with the <code>modelservices.games.game</code> decorator.</p>
-<p>Inside any Scope, you can make any method callable from javascript by decorating it with the <code>modelservice.games.register</code> decorator. Similarly, you can use the <code>modelservice.games.subscribe</code> decorator to subscribe any method to a topic:</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">modelservice.games</span> <span class="kn">import</span> <span class="n">Scope</span><span class="p">,</span> <span class="n">Game</span>
+<p>Inside any Scope, you can make any method callable from javascript by decorating it with the <code>modelservice.games.register</code> decorator.
+Similarly, you can use the <code>modelservice.games.subscribe</code> decorator to subscribe any method to a topic:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">modelservice.games</span> <span class="kn">import</span> <span class="n">Scenario</span><span class="p">,</span> <span class="n">Game</span>
 <span class="kn">from</span> <span class="nn">modelservice.games</span> <span class="kn">import</span> <span class="n">register</span><span class="p">,</span> <span class="n">subscribe</span>
 
 
-<span class="k">class</span> <span class="nc">Scenario</span><span class="p">(</span><span class="n">Scope</span><span class="p">):</span>
-    <span class="n">resource_name</span> <span class="o">=</span> <span class="s1">&#39;scenario&#39;</span>
+<span class="k">class</span> <span class="nc">ZeroSumScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
     <span class="n">players</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="nd">@register</span>
@@ -228,33 +226,31 @@
     <span class="k">def</span> <span class="nf">player_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">reason</span><span class="p">,</span> <span class="n">details</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">player</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
 
-<span class="n">Game</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;zero-sum&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">Scenario</span><span class="p">])</span>
+<span class="n">Game</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;zero-sum&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">ZeroSumScenario</span><span class="p">])</span>
 </pre></div>
 
 
-<p>In this example, <code>Scenario.add</code> will be registered by default at the uri <code>{settings.ROOT_URI}.models.{resource_name}.{scope_pk}.add</code>, and <code>Scenario.player_quit</code> will subscribe to <code>{settings.ROOT_URI}.models.resource_name}.{scope_pk}.player_quit</code>.</p>
-<p>The name that will be used for the function can be passed to the decorator:</p>
-<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Scenario</span><span class="p">(</span><span class="n">Scope</span><span class="p">):</span>
-    <span class="n">resource_name</span> <span class="o">=</span> <span class="s1">&#39;scenario&#39;</span>
+<p>In this example, <code>ZeroSumScenario.add</code> will be registered at the uri <code>{settings.ROOT_URI}.models.{resource_name}.{scope_pk}.add</code>
+ and <code>ZeroSumScenario.player_quit</code> will subscribe to <code>{settings.ROOT_URI}.models.resource_name}.{scope_pk}.player_quit</code>.</p>
+<p>Alternatively, the name that will be used for the topic can be passed to the decorator:</p>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ZeroSumScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
 
     <span class="nd">@subscribe</span><span class="p">(</span><span class="s1">&#39;player.quit&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">player_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">player</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
 
-<span class="n">Game</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;zero-sum&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">Scenario</span><span class="p">])</span>
+<span class="n">Game</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;zero-sum&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">ZeroSumScenario</span><span class="p">])</span>
 </pre></div>
 
 
-<p><code>Scenario.player_quit</code> will now be subscribed to <code>{settings.ROOT_URI}.models.{resource_name}.{scope_pk}.player.quit</code>.</p>
+<p><code>ZeroSumScenario.player_quit</code> will now be subscribed to <code>{settings.ROOT_URI}.models.{resource_name}.{scope_pk}.player.quit</code>.</p>
 <p>Further customization can be achieved by overriding the <code>Scope.get_routing(name)</code> method.</p>
 <h3 id="scope-methods">Scope methods</h3>
-<p>All <em>Scopes</em> inherits from a common <code>Scope</code> subclass and share these common methods:</p>
+<p>All <em>Scopes</em> inherit from a common <code>Scope</code> subclass and share these common methods among many others:</p>
 <ul>
-<li><code>.get_routing(name)</code>: given a topic short name, returns the full topic path. This is to avoid repeating the same topic namespace over and over, and to allow to use shorter topic names.</li>
+<li><code>.get_routing(name)</code>: given a topic short name, returns the full topic path. This is to avoid repeating the same topic namespace over and over, and allow using shorter topic names.</li>
 <li><code>.publish(topic, *args, **kwargs)</code>: Publishes a message on the specified <code>topic</code>. The actual topic name will be what is returned by <code>.get_routing(topic)</code> </li>
 <li><code>.save()</code>: Persist the scope by submitting it to the <code>Simpl-Games-API</code> service.</li>
-<li><code>.add_new_child_scope(json)</code></li>
-<li><code>.get_role(role_id)</code>: Give a role id, returns a full-fledged <code>Resource</code> object representing the role.</li>
 <li><code>.get_scope()</code>: Registered procedure at <code>{scope.topic}.get_scope</code> returning the scope's serialized version. Call this procedure if you want to retrieve the scope's state from the UI</li>
 <li><code>.get_scope_tree()</code>: Same as <code>.get_scope</code>, but will also walk down the tree from scope, returning its children recursively.</li>
 <li><code>.onConnected()</code></li>
@@ -262,15 +258,16 @@
 <li><code>.onStart()</code></li>
 </ul>
 <h3 id="scope-properties">Scope properties</h3>
-<p>All <em>Scopes</em> inherits from a common <code>Scope</code> subclass and share these common properties:</p>
+<p>All <em>Scopes</em> inherits from a common <code>Scope</code> subclass and share these common properties among many others:</p>
 <ul>
-<li><code>.pk</code></li>
-<li><code>.json</code>: A <code>dict</code> that contains the serialized representation of the scope. This is what will be passed to the browser and to the Simpl-Games-API service. Any user-defined state for the scope should be stored in <code>.json['data']</code></li>
+<li><code>.pk</code>: The scopes primary key</li>
+<li><code>.json</code>: A <code>dict</code> that contains the serialized representation of the scope. This is what will be passed to the browser
+and to the Simpl-Games-API service. Any user-defined state for the scope should be stored in <code>.json['data']</code></li>
+<li><code>.game</code>: The <code>Game</code> with which this scope belongs.</li>
 <li><code>.child_scopes</code>: A <a href="../scopemanager/"><code>ScopeManager</code></a> of the children scope.</li>
 <li><code>.games_client</code>: An instance of a REST API client for the Simpl-Games service.</li>
 <li><code>.my</code>: This special property will contain scopes that are related to the scope. See <a href="../traversing/">Traversing Scopes</a> for more details.</li>
 <li><code>.log</code>: a <code>txaio</code> logging instance. See "Logging" below.</li>
-<li><code>.runuser_class</code>: Scope class to use for RunUsers. Override this to provide your <a href="../custom_runuser/">Custom RunUser</a>. Defaults to <code>modelservices.games.RunUser</code>. Note: this only aplies to your top-level scope.</li>
 </ul>
 <h3 id="logging">Logging</h3>
 <p>To log from a <code>Scope</code>, you can use the <code>.log</code> attribute.</p>
@@ -280,9 +277,11 @@
 
 
 <h3 id="concrete-classes">Concrete Classes</h3>
-<p>For convenience, the following scopes are already defined in <code>modelservices.games</code>:</p>
+<p>For convenience, the following scopes are defined in <code>modelservices.games</code>:</p>
 <ul>
 <li><code>modelservices.games.Game</code></li>
+<li><code>modelservices.games.Phase</code></li>
+<li><code>modelservices.games.Role</code></li>
 <li><code>modelservices.games.Run</code></li>
 <li><code>modelservices.games.World</code></li>
 <li><code>modelservices.games.RunUser</code></li>
@@ -295,72 +294,73 @@
 <p>In addition to the methods inherited from <code>Scope</code>, <code>Game</code> has the following methods:</p>
 <ul>
 <li><code>.get_phases()</code>: Registered procedure to fetch the game's phases over WAMP.</li>
+<li><code>.get_roles()</code>: Registered procedure to fetch the game's roles over WAMP.</li>
 </ul>
 <p>In addition to the properties inherited from <code>Scope</code>, <code>Game</code> has the following properties:</p>
 <ul>
 <li><code>.phases</code>: A list of the game's <code>Phase</code>s.</li>
+<li><code>.roles</code>: A list of the game's <code>Roles</code>s.</li>
+<li><code>.runs</code>: A list of the game's <code>Run</code>s.</li>
 </ul>
 <h4 id="modelservicesgamesrun">modelservices.games.Run</h4>
 <p>In addition to the methods inherited from <code>Scope</code>, <code>Run</code> has the following methods:</p>
 <ul>
 <li><code>.advance_phase()</code>: Subscribed method to make the <code>Run</code> advance to the next phase.</li>
-<li><code>.on_advance_phase(next_phase)</code>: Override this method to perform custom logic right before the run is advanced to the next phase. Raise <code>Run.ChangePhaseException</code> to prevent the run from being advanced.</li>
-<li>
-<p><code>.rollback_phase()</code>: Subscribed method to make the <code>Run</code> rollback to the previous phase.</p>
-</li>
-<li>
-<p><code>.on_rollback_phase(previous_phase)</code>: Override this method to perform custom logic right before the run is rolled back to the previous phase. Raise <code>Run.ChangePhaseException</code> to prevent the run from being rolled back.</p>
-</li>
+<li><code>.on_advance_phase(next_phase)</code>: Override this method to perform custom logic right after the run is advanced to the next phase.</li>
+<li><code>.rollback_phase()</code>: Subscribed method to make the <code>Run</code> rollback to the previous phase.</li>
+<li><code>.on_rollback_phase(previous_phase)</code>: Override this method to perform custom logic right after the run is rolled back to the previous phase.</li>
 </ul>
 <p>In addition to the properties inherited from <code>Scope</code>, <code>Run</code> has the following properties:</p>
 <ul>
-<li><code>.current_phase</code>: The current Run's phase.</li>
+<li><code>.current_phase</code>: The Run's current phase.</li>
 <li><code>.worlds</code>: A list of <code>World</code>s within this <code>Run</code></li>
-<li><code>.ChangePhaseException</code>: Exception subclass to prevent the run from being changed.</li>
+<li><code>.runusers</code>: A list of <code>RunUsers</code>s within this <code>Run</code></li>
+</ul>
+<h4 id="modelservicesgamesworld">modelservices.games.World</h4>
+<p>In addition to the properties inherited from <code>Scope</code>, <code>World</code> has the following properties:</p>
+<ul>
+<li><code>.run</code>: The Run to which this World belongs.</li>
+<li><code>.scenarios</code>: A list of the World's <code>Scenarios</code>s.</li>
+<li><code>.runusers</code>: A list of the World's <code>RunUser</code>s.</li>
 </ul>
 <h4 id="modelservicesgamesrunuser">modelservices.games.RunUser</h4>
 <p>In addition to the methods inherited from <code>Scope</code>, <code>RunUser</code> has the following methods:</p>
 <ul>
 <li><code>.get_scenarios()</code>: Registered procedure to fetch the RunUser's Scenarios over WAMP.</li>
-<li><code>.add_scenario(name, payload)</code>: Subscriber that will add a new Scenario for the RunUser.</li>
 </ul>
 <p>In addition to the properties inherited from <code>Scope</code>, <code>Run</code> has the following properties:</p>
 <ul>
+<li><code>.run</code>: The Run to which this Runuser belongs.</li>
 <li><code>.scenarios</code>: A list of the RunUser's <code>Scenarios</code>s.</li>
+<li><code>.leader</code>: Flags whether the RunUser is a leader or a player in this <code>Run</code>.</li>
+<li><code>.role</code>: The RunUser's <code>Role</code> if the user is a player in this <code>Run</code>.</li>
+<li><code>.world</code>: The RunUser's <code>World</code> if the user is a player in this <code>Run</code> and belongs to a <code>World</code>.</li>
 </ul>
 <h4 id="modelservicesgamesscenario">modelservices.games.Scenario</h4>
-<p>In addition to the methods inherited from <code>Scope</code>, <code>Scenario</code> has the following methods:</p>
-<ul>
-<li><code>.advance()</code>: Stops the current period, and adds a new one.</li>
-<li><code>.add_new_period(json)</code>: alias of <code>.add_new_child_scope</code></li>
-</ul>
 <p>In addition to the properties inherited from <code>Scope</code>, <code>Scenario</code> has the following properties:</p>
 <ul>
-<li><code>.periods</code>: alias of <code>.child_scopes.all()</code></li>
-<li><code>.current_period</code>: returns the current period, defined as the last one created. Returns <code>None</code> if the scenario doesn't have any periods, yet.</li>
-<li><code>.world</code>: alias of <code>.my.parent</code></li>
+<li><code>.periods</code>: A list of the Scenario's <code>Period</code>'s.</li>
+<li><code>.world</code>: returns the <code>World</code> to which the Scenario belongs or <code>None</code> if the Scenario doesn't belong to a <code>World</code>.</li>
+<li><code>.runuser</code>: returns the <code>Runuser</code> to which the Scenario belongs or <code>None</code> if the Scenario doesn't belong to a <code>Runuser</code>.</li>
 </ul>
 <h4 id="modelservicesgamesperiod">modelservices.games.Period</h4>
-<p>In addition to the methods inherited from <code>Scope</code>, <code>Period</code> has the following methods:</p>
-<ul>
-<li><code>.add_new_decision(json)</code></li>
-<li><code>.add_new_result(json)</code></li>
-</ul>
 <p>In addition to the properties inherited from <code>Scope</code>, <code>Period</code> has the following properties:</p>
 <ul>
-<li><code>.decisions</code></li>
-<li><code>.results</code></li>
-<li><code>.scenario</code>: alias of <code>.my.parent</code></li>
+<li><code>.decisions</code>: A list of the Period's <code>Decisions</code>s.</li>
+<li><code>.results</code>: A list of the Period's <code>Result</code>s.</li>
+<li><code>.scenario</code>: returns the <code>Scenario</code> to which the Period belongs.</li>
 </ul>
 <h4 id="modelservicesgamesdecision">modelservices.games.Decision</h4>
 <p>In addition to the properties inherited from <code>Scope</code>, <code>Decision</code> has the following properties:</p>
 <ul>
-<li><code>.period</code>: alias of <code>.my.parent</code></li>
+<li><code>.period</code>: returns the <code>Period</code> to which the Decision belongs.</li>
+<li><code>.role</code>: returns the Decision's <code>Role</code>.</li>
 </ul>
 <h4 id="modelservicesgamesresult">modelservices.games.Result</h4>
 <p>In addition to the properties inherited from <code>Scope</code>, <code>Result</code> has the following properties:</p>
 <ul>
-<li><code>.period</code>: alias of <code>.my.parent</code></li>
+<li><code>.period</code>: returns the <code>Period</code> to which the Result belongs.</li>
+<li><code>.role</code>: returns the Result's <code>Role</code>.</li>
 </ul></div>
         </div>
 

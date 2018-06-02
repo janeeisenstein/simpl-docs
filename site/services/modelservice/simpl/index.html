@@ -113,10 +113,6 @@
 <li >
     <a href="../scopemanager/">Scope Manager</a>
 </li>
-            
-<li >
-    <a href="../custom_runuser/">Custom RunUser</a>
-</li>
     </ul>
   </li>
             
@@ -189,18 +185,21 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="the-simpl-client">The simpl client</h1>
-<p>The <code>modelservice.simpl.games_client</code> class provides a generic REST API client that you can use to interface with the Simpl-Games service.</p>
+<p>The <code>modelservice.simpl.games_client</code> class provides a generic asynchronous REST API client that you can use to
+interface with the Simpl-Games-API service.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">modelservice.simpl</span> <span class="kn">import</span> <span class="n">games_client</span>
 
-<span class="n">users</span> <span class="o">=</span> <span class="n">games_client</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">async</span> <span class="k">with</span> <span class="n">games_client</span> <span class="k">as</span> <span class="n">api_session</span><span class="p">:</span>
 
-<span class="n">world_users</span> <span class="o">=</span> <span class="n">games_client</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-<span class="n">user</span> <span class="o">=</span> <span class="n">games_client</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;myuser@example.com&#39;</span><span class="p">)</span>
+    <span class="n">world_users</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
 
-<span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="s1">&#39;Jessie&#39;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;myuser@example.com&#39;</span><span class="p">)</span>
 
-<span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="s1">&#39;Jessie&#39;</span>
+
+    <span class="n">await</span> <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 </pre></div>
 
 

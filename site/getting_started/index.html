@@ -113,10 +113,6 @@
 <li >
     <a href="../services/modelservice/scopemanager/">Scope Manager</a>
 </li>
-            
-<li >
-    <a href="../services/modelservice/custom_runuser/">Custom RunUser</a>
-</li>
     </ul>
   </li>
             
@@ -217,8 +213,8 @@ git clone git@github.com:simplworld/simpl-games-api.git
 <p>Connect to the Vagrant environment and install simpl-games-api:</p>
 <div class="codehilite"><pre><span></span>vagrant ssh
 mkvirtualenv simpl-games-api
-add2virtualenv /vagrant/projects/simpl-games-api
 cd projects/simpl-games-api
+add2virtualenv .
 pip install -r requirements.txt
 </pre></div>
 
@@ -226,12 +222,12 @@ pip install -r requirements.txt
 <p>Create a Simpl database:</p>
 <div class="codehilite"><pre><span></span>createdb simpl
 ./manage.py migrate
-./manage.py create_vagrant_user
+./manage.py create_simpl_user
 </pre></div>
 
 
 <p>Start the simpl-games-api web server:</p>
-<div class="codehilite"><pre><span></span>./manage.py runserver 0.0.0.0:8100
+<div class="codehilite"><pre><span></span>./manage.py run_gunicorn 0.0.0.0:8100
 </pre></div>
 
 
@@ -245,9 +241,9 @@ git clone git@github.com:simplworld/simpl-calc-model.git
 <p>Connect to Vagrant environment and install the simpl-calc Model Service:</p>
 <div class="codehilite"><pre><span></span>vagrant ssh
 mkvirtualenv simpl-calc-model
-add2virtualenv /vagrant/projects/simpl-calc-model
 cd projects/simpl-calc-model
-pip install -r requirements.txt
+add2virtualenv .
+PIP_PROCESS_DEPENDENCY_LINKS=1 pip install -r requirements.txt
 </pre></div>
 
 
@@ -272,10 +268,9 @@ git clone git@github.com:simplworld/simpl-calc-ui.git
 <p>Connect to Vagrant environment and install the simpl-calc Front End</p>
 <div class="codehilite"><pre><span></span>vagrant ssh
 mkvirtualenv simpl-calc-ui
-add2virtualenv /vagrant/projects/simpl-calc-ui
 cd projects/simpl-calc-ui
+add2virtualenv .
 pip install -r requirements.txt
-./manage.py makemigrations
 ./manage.py migrate
 </pre></div>
 
@@ -286,12 +281,18 @@ pip install -r requirements.txt
 
 
 <p>Install gulp and/or webpack globally outside Vagrant to ensure they are on your PATH</p>
-<p>sudo npm install --global webpack
-sudo npm install --global gulp</p>
+<div class="codehilite"><pre><span></span>sudo npm install --global webpack
+sudo npm install --global gulp
+</pre></div>
+
+
 <p>In a separate terminal, update node_modules and run Gulp to compile JS and SASS</p>
-<p>cd to simpl-calc-ui directory
+<div class="codehilite"><pre><span></span>cd to simpl-calc-ui directory
 npm install
-gulp</p>
+gulp
+</pre></div>
+
+
 <h2 id="using-the-simpl-calc-simulation">Using the Simpl Calc Simulation</h2>
 <p>The simpl-cal simulation is now running at <code>http://localhost:8000/</code></p>
 <p>Log in player s1@calc.edu (password s1) or player s2@calc.edu (password s2). Once logged in, use the simulation to add numbers to a total.</p>

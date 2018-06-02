@@ -113,10 +113,6 @@
 <li >
     <a href="../../services/modelservice/scopemanager/">Scope Manager</a>
 </li>
-            
-<li >
-    <a href="../../services/modelservice/custom_runuser/">Custom RunUser</a>
-</li>
     </ul>
   </li>
             
@@ -202,7 +198,7 @@ $ mkvirtualenv calc-model
 
 
 <p>Install Django</p>
-<div class="codehilite"><pre><span></span>$ pip install <span class="nv">Django</span><span class="o">==</span><span class="m">1</span>.11.6
+<div class="codehilite"><pre><span></span>$ pip install <span class="nv">Django</span><span class="o">==</span><span class="m">1</span>.11.11
 </pre></div>
 
 
@@ -358,8 +354,7 @@ $ py.test
 <span class="n">async</span> <span class="k">def</span> <span class="nf">delete_default_run</span><span class="p">(</span><span class="n">api_session</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Delete default Run &quot;&quot;&quot;</span>
     <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;Resetting the Calc game default run...&#39;</span><span class="p">,</span> <span class="s1">&#39; done&#39;</span><span class="p">)</span>
-    <span class="n">game</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">games</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="s1">&#39;calc&#39;</span><span class="p">)</span>
-    <span class="n">runs</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">game</span><span class="o">=</span><span class="n">game</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">runs</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">game_slug</span><span class="o">=</span><span class="s1">&#39;calc&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
             <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
@@ -384,7 +379,7 @@ $ py.test
         <span class="c1"># Handle resetting the game</span>
         <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span>
-                <span class="s1">&#39;Are you sure you want to delete the default game run and recreate from scratch?&#39;</span><span class="p">):</span>
+                    <span class="s1">&#39;Are you sure you want to delete the default game run and recreate from scratch?&#39;</span><span class="p">):</span>
                 <span class="n">await</span> <span class="n">delete_default_run</span><span class="p">(</span><span class="n">api_session</span><span class="p">)</span>
 
         <span class="c1"># Create a Game</span>
@@ -395,22 +390,22 @@ $ py.test
         <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating game: &#39;</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Create required Roles (&quot;Calculator&quot;)</span>
-        <span class="n">playerRole</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">player_role</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
             <span class="n">game</span><span class="o">=</span><span class="n">game</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating role: &#39;</span><span class="p">,</span> <span class="n">playerRole</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating role: &#39;</span><span class="p">,</span> <span class="n">player_role</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Create game Phases (&quot;Play&quot;)</span>
-        <span class="n">playPhase</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">phases</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">play_phase</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">phases</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
             <span class="n">game</span><span class="o">=</span><span class="n">game</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Play&#39;</span><span class="p">,</span>
             <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating phase: &#39;</span><span class="p">,</span> <span class="n">playPhase</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating phase: &#39;</span><span class="p">,</span> <span class="n">play_phase</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Add run with 2 players ready to play</span>
-        <span class="n">run</span> <span class="o">=</span> <span class="n">await</span> <span class="n">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">playerRole</span><span class="p">,</span> <span class="n">playPhase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="n">await</span> <span class="n">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">player_role</span><span class="p">,</span> <span class="n">play_phase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
 
         <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;Completed setting up run: id=&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
@@ -512,57 +507,60 @@ current <code>Period</code>, and the <code>Scenario</code> will step to the next
 
 <span class="n">async</span> <span class="k">def</span> <span class="nf">save_decision</span><span class="p">(</span><span class="n">period_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">decision</span><span class="p">):</span>
     <span class="c1"># add decision to period</span>
-    <span class="n">decision</span> <span class="o">=</span> <span class="n">await</span> <span class="n">games_client</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-        <span class="n">period</span><span class="o">=</span><span class="n">period_id</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;decision&#39;</span><span class="p">,</span>
-        <span class="n">role</span><span class="o">=</span><span class="n">role_id</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;operand&quot;</span><span class="p">:</span> <span class="n">decision</span><span class="p">}</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">decision</span>
+    <span class="n">async</span> <span class="k">with</span> <span class="n">games_client</span> <span class="k">as</span> <span class="n">api_session</span><span class="p">:</span>
+        <span class="n">decision</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">period</span><span class="o">=</span><span class="n">period_id</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;decision&#39;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">role_id</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;operand&quot;</span><span class="p">:</span> <span class="n">decision</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">decision</span>
 
 
 <span class="n">async</span> <span class="k">def</span> <span class="nf">step_scenario</span><span class="p">(</span><span class="n">scenario_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Step the scenario&#39;s current period</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">periods</span> <span class="o">=</span> <span class="n">await</span> <span class="n">games_client</span><span class="o">.</span><span class="n">periods</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario_id</span><span class="p">)</span>
-    <span class="n">period_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span>
-    <span class="n">period</span> <span class="o">=</span> <span class="n">periods</span><span class="p">[</span><span class="n">period_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">async</span> <span class="k">with</span> <span class="n">games_client</span> <span class="k">as</span> <span class="n">api_session</span><span class="p">:</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">periods</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario_id</span><span class="p">,</span>
+                                                   <span class="n">ordering</span><span class="o">=</span><span class="s1">&#39;order&#39;</span><span class="p">)</span>
+        <span class="n">period_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="n">periods</span><span class="p">[</span><span class="n">period_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">operand</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">period_decisions</span> <span class="o">=</span> <span class="n">await</span> <span class="n">games_client</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">period_decisions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">operand</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">period_decisions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;operand&quot;</span><span class="p">])</span>
+        <span class="n">operand</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">period_decisions</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">period_decisions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">operand</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">period_decisions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;operand&quot;</span><span class="p">])</span>
 
-    <span class="n">prev_total</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="k">if</span> <span class="n">period_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">prev_period</span> <span class="o">=</span> <span class="n">periods</span><span class="p">[</span><span class="n">period_count</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
-        <span class="n">prev_period_results</span> <span class="o">=</span> \
-            <span class="n">await</span> <span class="n">games_client</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="n">prev_period</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prev_period_results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">prev_total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">prev_period_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">])</span>
+        <span class="n">prev_total</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">period_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">prev_period</span> <span class="o">=</span> <span class="n">periods</span><span class="p">[</span><span class="n">period_count</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">prev_period_results</span> <span class="o">=</span> \
+                <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="n">prev_period</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prev_period_results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">prev_total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">prev_period_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">])</span>
 
-    <span class="c1"># step model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">prev_total</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">}</span>
+        <span class="c1"># step model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">prev_total</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">}</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">games_client</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-        <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;results&#39;</span><span class="p">,</span>
-        <span class="n">role</span><span class="o">=</span><span class="n">role_id</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">data</span>
-    <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;results&#39;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">role_id</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+        <span class="p">)</span>
 
-    <span class="c1"># prepare for next step by adding a new period</span>
-    <span class="n">next_period_order</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">order</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">next_period</span> <span class="o">=</span> <span class="n">await</span> <span class="n">games_client</span><span class="o">.</span><span class="n">periods</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-        <span class="n">scenario</span><span class="o">=</span><span class="n">scenario_id</span><span class="p">,</span>
-        <span class="n">order</span><span class="o">=</span><span class="n">next_period_order</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">await</span> <span class="n">next_period</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="c1"># prepare for next step by adding a new period</span>
+        <span class="n">next_period_order</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">order</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">next_period</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">periods</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario_id</span><span class="p">,</span>
+            <span class="n">order</span><span class="o">=</span><span class="n">next_period_order</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">await</span> <span class="n">next_period</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">next_period</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="n">next_period</span><span class="o">.</span><span class="n">id</span>
 </pre></div>
 
 
