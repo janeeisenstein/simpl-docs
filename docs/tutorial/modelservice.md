@@ -366,7 +366,8 @@ async def step_scenario(scenario_id, role_id):
     Step the scenario's current period
     """
     async with games_client as api_session:
-        periods = await api_session.periods.filter(scenario=scenario_id)
+        periods = await api_session.periods.filter(scenario=scenario_id,
+                                                   ordering='order')
         period_count = len(periods)
         period = periods[period_count - 1]
 
