@@ -41,4 +41,3 @@ $ ./manage.py runserver 0.0.0.0:8100
 
 This is all you need for your local Simpl-Games-API instance.
 
-You can now head over to the [Model Service Tutorial](./modelservice.md).

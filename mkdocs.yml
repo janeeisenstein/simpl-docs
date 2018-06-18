@@ -10,10 +10,9 @@ pages:
   - Getting Started:
     - Running a Simpl Simulation: getting_started/index.md
   - Tutorials:
-    - Single Player Example: tutorial/index.md
-    - Build the Simpl Games API service: tutorial/games-api.md
-    - Build the Single Player Model Service: tutorial/modelservice.md
-    - Build the Single Player Front End: tutorial/frontend.md
+    - Single Player Example: tutorials/single-player/index.md
+    - Build the Single Player Model Service: tutorials/single-player/modelservice.md
+    - Build the Single Player Front End: tutorials/single-player/frontend.md
   - Services:
     - simpl-users: services/simpl-users/index.md
     - Simpl-Games-API: services/Simpl-Games-API/index.md

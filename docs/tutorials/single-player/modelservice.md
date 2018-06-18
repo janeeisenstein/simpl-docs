@@ -2,10 +2,8 @@
 
 ## Prerequisites
 
-This part of the tutorial is a continuation of the [Simpl Games API Setup](./games-api.md).  Please complete that section before continuing.  Note, this tutorial assumes you are going through this guide on the same Vagrant box you provisioned in the previous step.
-
 !!! note
-    This tutorial assumes you still have Games API service running (http://localhost:8100/).  Please open up an additional terminal window before continuing.
+    This tutorial assumes you have [Games API service](../../getting_started/index.md) running (http://localhost:8100/) on a Vagrant box you have provisioned.  Please open up an additional terminal window before continuing.
 
 ## Installation
 

@@ -8,7 +8,7 @@ This tutorial assumes you already the following software installed:
 * NPM >= 3.6.0
 
 !!! note
-    This tutorial assumes you still have both the [Games API service](./games-api.md) (http://localhost:8100/) and the [Model service](./games-api.md) (http://localhost:8080/) running.  Please open up an additional terminal window and SSH into the Vagrant box before continuing.
+    This tutorial assumes you still have both the [Games API service](../../getting_started/index.md) (http://localhost:8100/) and the [Model service](./modelservice.md) (http://localhost:8080/) running.  Please open up an additional terminal window and SSH into the Vagrant box before continuing.
 
 ## Installation
 
@@ -76,7 +76,7 @@ It is also recommended to configure your editor to integrate with ESLint:
 
 ## Configuration
 
-Just like most Websites, the frontend service will need a place where it can store information about sessions and their users. The users' specific information will be fetched from the [Simple Games API](./games-api.md) and kept in sync automatically.
+Just like most Websites, the frontend service will need a place where it can store information about sessions and their users. The users' specific information will be fetched from the [Simple Games API](../../getting_started/index.md) and kept in sync automatically.
 
 !!! note
     For the purposes of this tutorial we're going to use SQLite, but this can be changed to match whatever database backend you prefer. In a production environment, you'll likely want to switch to something like PostgreSQL.

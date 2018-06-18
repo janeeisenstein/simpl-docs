@@ -1,86 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    
     <url>
      <loc>/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
      <loc>/overview/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
-        
     <url>
      <loc>/getting_started/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
-    
-        
     <url>
-     <loc>/tutorial/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <loc>/tutorials/single-player/</loc>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/tutorial/games-api/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <loc>/tutorials/single-player/modelservice/</loc>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/tutorial/modelservice/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <loc>/tutorials/single-player/frontend/</loc>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    <url>
-     <loc>/tutorial/frontend/</loc>
-     <lastmod>2018-06-02</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    
-
-    
-        
     <url>
      <loc>/services/simpl-users/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
      <loc>/services/Simpl-Games-API/</loc>
-     <lastmod>2018-06-02</lastmod>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>/services/modelservice/games/</loc>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>/services/modelservice/traversing/</loc>
+     <lastmod>2018-06-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
+    <url>
+     <loc>/services/modelservice/scopemanager/</loc>
+     <lastmod>2018-06-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>/services/modelservice/running/</loc>
+     <lastmod>2018-06-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>/services/modelservice/settings/</loc>
+     <lastmod>2018-06-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>/services/modelservice/simpl/</loc>
+     <lastmod>2018-06-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>/services/modelservice/webhooks/</loc>
+     <lastmod>2018-06-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>/services/simpl-react/overview/</loc>
+     <lastmod>2018-06-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>/services/simpl-react/actions/</loc>
+     <lastmod>2018-06-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
 </urlset>

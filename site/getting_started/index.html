@@ -66,19 +66,15 @@
                         <ul class="dropdown-menu">
                             
 <li >
-    <a href="../tutorial/">Single Player Example</a>
+    <a href="../tutorials/single-player/">Single Player Example</a>
 </li>
                             
 <li >
-    <a href="../tutorial/games-api/">Build the Simpl Games API service</a>
+    <a href="../tutorials/single-player/modelservice/">Build the Single Player Model Service</a>
 </li>
                             
 <li >
-    <a href="../tutorial/modelservice/">Build the Single Player Model Service</a>
-</li>
-                            
-<li >
-    <a href="../tutorial/frontend/">Build the Single Player Front End</a>
+    <a href="../tutorials/single-player/frontend/">Build the Single Player Front End</a>
 </li>
                         </ul>
                     </li>
@@ -163,7 +159,7 @@
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../tutorial/">
+                        <a rel="prev" href="../tutorials/single-player/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -177,7 +173,7 @@
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#simpl-getting-started-guide">Simpl Getting Started Guide</a></li>
             <li><a href="#prerequisites">Prerequisites</a></li>
-            <li><a href="#run-the-simpl-games-api-server">Run the Simpl Games API server</a></li>
+            <li><a href="#run-the-simpl-games-api-service">Run the Simpl Games API Service</a></li>
             <li><a href="#run-the-simpl-calc-model-service">Run the Simpl Calc Model Service</a></li>
             <li><a href="#run-the-simpl-calc-frontend-ui">Run the Simpl Calc Frontend UI</a></li>
             <li><a href="#using-the-simpl-calc-simulation">Using the Simpl Calc Simulation</a></li>
@@ -203,7 +199,7 @@ vagrant up
 </pre></div>
 
 
-<h2 id="run-the-simpl-games-api-server">Run the Simpl Games API server</h2>
+<h2 id="run-the-simpl-games-api-service">Run the Simpl Games API Service</h2>
 <p>Clone the simpl-games-api repository in the Vagrant image's project directory:</p>
 <div class="codehilite"><pre><span></span>cd python-vagrant-centos7/projects
 git clone git@github.com:simplworld/simpl-games-api.git
@@ -226,8 +222,8 @@ pip install -r requirements.txt
 </pre></div>
 
 
-<p>Start the simpl-games-api web server:</p>
-<div class="codehilite"><pre><span></span>./manage.py run_gunicorn 0.0.0.0:8100
+<p>Start the simpl-games-api web service:</p>
+<div class="codehilite"><pre><span></span>./manage.py run_gunicorn
 </pre></div>
 
 

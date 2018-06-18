@@ -19,7 +19,7 @@ vagrant up
 ```
 
 
-## Run the Simpl Games API server
+## Run the Simpl Games API Service
 
 Clone the simpl-games-api repository in the Vagrant image's project directory:
 
@@ -46,10 +46,10 @@ createdb simpl
 ./manage.py create_simpl_user
 ```
 
-Start the simpl-games-api web server:
+Start the simpl-games-api web service:
 
 ```
-./manage.py run_gunicorn 0.0.0.0:8100
+./manage.py run_gunicorn
 ```
 
 

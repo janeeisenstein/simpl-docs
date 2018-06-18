@@ -7,22 +7,22 @@
         
         
         
-        <link rel="shortcut icon" href="../img/favicon.ico">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
         <title>Single Player Example - Simpl Documentation</title>
-        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
-        <link rel="stylesheet" href="../css/highlight.css">
-        <link href="../pygments.css" rel="stylesheet">
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/highlight.css">
+        <link href="../../pygments.css" rel="stylesheet">
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
 
-        <script src="../js/jquery-1.10.2.min.js"></script>
-        <script src="../js/bootstrap-3.0.3.min.js"></script>
-        <script src="../js/highlight.pack.js"></script> 
+        <script src="../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/highlight.pack.js"></script> 
     </head>
 
     <body>
@@ -39,7 +39,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="..">Simpl Documentation</a>
+            <a class="navbar-brand" href="../..">Simpl Documentation</a>
         </div>
 
         <!-- Expanded navigation -->
@@ -47,17 +47,17 @@
                 <!-- Main navigation -->
                 <ul class="nav navbar-nav">
                     <li >
-                        <a href="..">Welcome to Simpl</a>
+                        <a href="../..">Welcome to Simpl</a>
                     </li>
                     <li >
-                        <a href="../overview/">Overview</a>
+                        <a href="../../overview/">Overview</a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             
 <li >
-    <a href="../getting_started/">Running a Simpl Simulation</a>
+    <a href="../../getting_started/">Running a Simpl Simulation</a>
 </li>
                         </ul>
                     </li>
@@ -67,10 +67,6 @@
                             
 <li class="active">
     <a href="./">Single Player Example</a>
-</li>
-                            
-<li >
-    <a href="games-api/">Build the Simpl Games API service</a>
 </li>
                             
 <li >
@@ -87,11 +83,11 @@
                         <ul class="dropdown-menu">
                             
 <li >
-    <a href="../services/simpl-users/">simpl-users</a>
+    <a href="../../services/simpl-users/">simpl-users</a>
 </li>
                             
 <li >
-    <a href="../services/Simpl-Games-API/">Simpl-Games-API</a>
+    <a href="../../services/Simpl-Games-API/">Simpl-Games-API</a>
 </li>
                             
   <li class="dropdown-submenu">
@@ -103,33 +99,33 @@
     <ul class="dropdown-menu">
             
 <li >
-    <a href="../services/modelservice/games/">Scopes</a>
+    <a href="../../services/modelservice/games/">Scopes</a>
 </li>
             
 <li >
-    <a href="../services/modelservice/traversing/">Traversing Scopes</a>
+    <a href="../../services/modelservice/traversing/">Traversing Scopes</a>
 </li>
             
 <li >
-    <a href="../services/modelservice/scopemanager/">Scope Manager</a>
+    <a href="../../services/modelservice/scopemanager/">Scope Manager</a>
 </li>
     </ul>
   </li>
             
 <li >
-    <a href="../services/modelservice/running/">Running</a>
+    <a href="../../services/modelservice/running/">Running</a>
 </li>
             
 <li >
-    <a href="../services/modelservice/settings/">Setting</a>
+    <a href="../../services/modelservice/settings/">Setting</a>
 </li>
             
 <li >
-    <a href="../services/modelservice/simpl/">Simpl client</a>
+    <a href="../../services/modelservice/simpl/">Simpl client</a>
 </li>
             
 <li >
-    <a href="../services/modelservice/webhooks/">Webhooks</a>
+    <a href="../../services/modelservice/webhooks/">Webhooks</a>
 </li>
     </ul>
   </li>
@@ -139,11 +135,11 @@
     <ul class="dropdown-menu">
             
 <li >
-    <a href="../services/simpl-react/overview/">Overview</a>
+    <a href="../../services/simpl-react/overview/">Overview</a>
 </li>
             
 <li >
-    <a href="../services/simpl-react/actions/">Actions</a>
+    <a href="../../services/simpl-react/actions/">Actions</a>
 </li>
     </ul>
   </li>
@@ -158,12 +154,12 @@
                     </a>
                 </li>
                     <li >
-                        <a rel="next" href="../getting_started/">
+                        <a rel="next" href="../../getting_started/">
                             <i class="fa fa-arrow-left"></i> Previous
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="games-api/">
+                        <a rel="prev" href="modelservice/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -186,13 +182,13 @@ This game implements a model that takes a number and adds it to a current total.
 This project, though basic, will demonstrate how the various pieces of Simpl interact to provide a platform
 upon which single player games can be created.</p>
 <p>The foundation of Simpl is the Games API Service.  This service provides API endpoints that allow the game
-to store information regarding a game and its current state in the database.
-The Model Service provides the mathematical component of a Simpl game, it interacts with the Games API and
-provides messaging back to the Frontend UI regarding game state.  More information can be found <a href="../overview/">here</a>.</p>
-<p>We'll start by setting up our API service. Next, we'll implement our Model Service, giving us our mathematical model for Simpl Calc.
-Finally, we'll build the user-facing pieces.</p>
+to store information regarding a game and its current state in the database. Start by running the
+Simpl Games API Service following the <a href="../../getting_started/">getting started instructions</a>.</p>
+<p>The Model Service provides the mathematical component of a Simpl game, it interacts with the Games API and
+provides messaging back to the Frontend UI regarding game state.  More information can be found <a href="../../overview/">here</a>.</p>
+<p>First, we'll implement our Model Service, giving us our mathematical model for Simpl Calc.
+Next, we'll build the user-facing pieces.</p>
 <ol>
-<li><a href="games-api/">Build the Simpl-Games-API service</a></li>
 <li><a href="modelservice/">Build the Single Player Model Service</a></li>
 <li><a href="frontend/">Build the Single Player Frontend UI</a></li>
 </ol></div>
@@ -202,10 +198,10 @@ Finally, we'll build the user-facing pieces.</p>
             <hr>
             <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
-        <script>var base_url = '..';</script>
-        <script src="../js/base.js"></script>
-        <script src="../search/require.js"></script>
-        <script src="../search/search.js"></script>
+        <script>var base_url = '../..';</script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/require.js"></script>
+        <script src="../../search/search.js"></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
     <div class="modal-dialog">
