@@ -385,15 +385,15 @@ $ py.test
         <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating game: &#39;</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Create game Phases (&quot;Play&quot;)</span>
-        <span class="n">playPhase</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">phases</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">play_phase</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">phases</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
             <span class="n">game</span><span class="o">=</span><span class="n">game</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Play&#39;</span><span class="p">,</span>
             <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating phase: &#39;</span><span class="p">,</span> <span class="n">playPhase</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating phase: &#39;</span><span class="p">,</span> <span class="n">play_phase</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Add run with 2 players ready to play</span>
-        <span class="n">run</span> <span class="o">=</span> <span class="n">await</span> <span class="n">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">playPhase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="n">await</span> <span class="n">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">play_phase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
 
         <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;Completed setting up run: id=&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
