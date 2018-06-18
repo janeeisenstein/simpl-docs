@@ -384,28 +384,21 @@ $ py.test
         <span class="p">)</span>
         <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating game: &#39;</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="c1"># Create required Roles (&quot;Calculator&quot;)</span>
-        <span class="n">player_role</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-            <span class="n">game</span><span class="o">=</span><span class="n">game</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating role: &#39;</span><span class="p">,</span> <span class="n">player_role</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
         <span class="c1"># Create game Phases (&quot;Play&quot;)</span>
-        <span class="n">play_phase</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">phases</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">playPhase</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">phases</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
             <span class="n">game</span><span class="o">=</span><span class="n">game</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Play&#39;</span><span class="p">,</span>
             <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating phase: &#39;</span><span class="p">,</span> <span class="n">play_phase</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating phase: &#39;</span><span class="p">,</span> <span class="n">playPhase</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Add run with 2 players ready to play</span>
-        <span class="n">run</span> <span class="o">=</span> <span class="n">await</span> <span class="n">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">player_role</span><span class="p">,</span> <span class="n">play_phase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="n">await</span> <span class="n">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">playPhase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
 
         <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;Completed setting up run: id=&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">user_count</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">):</span>
+<span class="n">async</span> <span class="k">def</span> <span class="nf">add_run</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">user_count</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">api_session</span><span class="p">):</span>
     <span class="c1"># Create or get the Run</span>
     <span class="n">run</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
         <span class="n">game</span><span class="o">=</span><span class="n">game</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
@@ -436,12 +429,12 @@ $ py.test
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">user_count</span><span class="p">):</span>
         <span class="n">user_number</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="c1"># Add player to run</span>
-        <span class="n">await</span> <span class="n">add_player</span><span class="p">(</span><span class="n">user_number</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
+        <span class="n">await</span> <span class="n">add_player</span><span class="p">(</span><span class="n">user_number</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">api_session</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">run</span>
 
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">add_player</span><span class="p">(</span><span class="n">user_number</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">api_session</span><span class="p">):</span>
+<span class="n">async</span> <span class="k">def</span> <span class="nf">add_player</span><span class="p">(</span><span class="n">user_number</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">api_session</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add player with name based on user_number to run with role&quot;&quot;&quot;</span>
 
     <span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;s{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_number</span><span class="p">)</span>
@@ -459,7 +452,7 @@ $ py.test
     <span class="n">runuser</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">runusers</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
         <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
         <span class="n">run</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-        <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
     <span class="p">)</span>
     <span class="n">echo</span><span class="p">(</span><span class="s1">&#39;getting or creating runuser for user: &#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
 
@@ -500,19 +493,19 @@ current <code>Period</code>, and the <code>Scenario</code> will step to the next
 <span class="kn">from</span> <span class="nn">.model</span> <span class="kn">import</span> <span class="n">Model</span>
 
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">save_decision</span><span class="p">(</span><span class="n">period_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">decision</span><span class="p">):</span>
+<span class="n">async</span> <span class="k">def</span> <span class="nf">save_decision</span><span class="p">(</span><span class="n">period_id</span><span class="p">,</span> <span class="n">decision</span><span class="p">):</span>
     <span class="c1"># add decision to period</span>
     <span class="n">async</span> <span class="k">with</span> <span class="n">games_client</span> <span class="k">as</span> <span class="n">api_session</span><span class="p">:</span>
         <span class="n">decision</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
             <span class="n">period</span><span class="o">=</span><span class="n">period_id</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;decision&#39;</span><span class="p">,</span>
-            <span class="n">role</span><span class="o">=</span><span class="n">role_id</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;operand&quot;</span><span class="p">:</span> <span class="n">decision</span><span class="p">}</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;operand&quot;</span><span class="p">:</span> <span class="n">decision</span><span class="p">},</span>
+            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">decision</span>
 
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">step_scenario</span><span class="p">(</span><span class="n">scenario_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">):</span>
+<span class="n">async</span> <span class="k">def</span> <span class="nf">step_scenario</span><span class="p">(</span><span class="n">scenario_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Step the scenario&#39;s current period</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -543,8 +536,8 @@ current <code>Period</code>, and the <code>Scenario</code> will step to the next
         <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">api_session</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
             <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;results&#39;</span><span class="p">,</span>
-            <span class="n">role</span><span class="o">=</span><span class="n">role_id</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
         <span class="p">)</span>
 
         <span class="c1"># prepare for next step by adding a new period</span>
@@ -580,14 +573,10 @@ current <code>Period</code>, and the <code>Scenario</code> will step to the next
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;submit_decision: Key: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
 
-        <span class="n">user</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
-        <span class="n">runuser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">get_scope</span><span class="p">(</span><span class="s1">&#39;runuser&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">runuser</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
-        <span class="n">role</span> <span class="o">=</span> <span class="n">runuser</span><span class="o">.</span><span class="n">role</span>
-
-        <span class="n">await</span> <span class="n">save_decision</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">,</span> <span class="n">role</span><span class="o">.</span><span class="n">pk</span><span class="p">,</span> <span class="n">operand</span><span class="p">)</span>
+        <span class="n">await</span> <span class="n">save_decision</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">,</span> <span class="n">operand</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;submit_decision: saved decision&quot;</span><span class="p">)</span>
 
-        <span class="n">await</span> <span class="n">step_scenario</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">pk</span><span class="p">,</span> <span class="n">role</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+        <span class="n">await</span> <span class="n">step_scenario</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;submit_decision: stepped scenario&quot;</span><span class="p">)</span>
 
 

@@ -227,13 +227,6 @@ async def command(reset):
         )
         echo('getting or creating game: ', game.name)
 
-        # Create required Roles ("Calculator")
-        player_role = await api_session.roles.get_or_create(
-            game=game.id,
-            name='Calculator',
-        )
-        echo('getting or creating role: ', player_role.name)
-
         # Create game Phases ("Play")
         play_phase = await api_session.phases.get_or_create(
             game=game.id,
@@ -243,12 +236,12 @@ async def command(reset):
         echo('getting or creating phase: ', play_phase.name)
 
         # Add run with 2 players ready to play
-        run = await add_run(game, 'default', 2, player_role, play_phase, api_session)
+        run = await add_run(game, 'default', 2, play_phase, api_session)
 
         echo('Completed setting up run: id=', run.id)
 
 
-async def add_run(game, run_name, user_count, role, phase, api_session):
+async def add_run(game, run_name, user_count, phase, api_session):
     # Create or get the Run
     run = await api_session.runs.get_or_create(
         game=game.id,
@@ -279,12 +272,12 @@ async def add_run(game, run_name, user_count, role, phase, api_session):
     for n in range(0, user_count):
         user_number = n + 1
         # Add player to run
-        await add_player(user_number, run, role, api_session)
+        await add_player(user_number, run, api_session)
 
     return run
 
 
-async def add_player(user_number, run, role, api_session):
+async def add_player(user_number, run, api_session):
     """Add player with name based on user_number to run with role"""
 
     username = 's{0}'.format(user_number)
@@ -302,7 +295,7 @@ async def add_player(user_number, run, role, api_session):
     runuser = await api_session.runusers.get_or_create(
         user=user.id,
         run=run.id,
-        role=role.id,
+        defaults={"role": None}
     )
     echo('getting or creating runuser for user: ', user.email)
 
@@ -347,19 +340,19 @@ from modelservice.simpl import games_client
 from .model import Model
 
 
-async def save_decision(period_id, role_id, decision):
+async def save_decision(period_id, decision):
     # add decision to period
     async with games_client as api_session:
         decision = await api_session.decisions.get_or_create(
             period=period_id,
             name='decision',
-            role=role_id,
-            data={"operand": decision}
+            data={"operand": decision},
+            defaults={"role": None}
         )
         return decision
 
 
-async def step_scenario(scenario_id, role_id):
+async def step_scenario(scenario_id):
     """
     Step the scenario's current period
     """
@@ -390,8 +383,8 @@ async def step_scenario(scenario_id, role_id):
         result = await api_session.results.get_or_create(
             period=period.id,
             name='results',
-            role=role_id,
-            data=data
+            data=data,
+            defaults={"role": None}
         )
 
         # prepare for next step by adding a new period
@@ -429,14 +422,10 @@ class CalcPeriod(Period):
         for k in kwargs:
             self.session.log.info("submit_decision: Key: {}".format(k))
 
-        user = kwargs['user']
-        runuser = self.game.get_scope('runuser', user.runuser.pk)
-        role = runuser.role
-
-        await save_decision(self.pk, role.pk, operand)
+        await save_decision(self.pk, operand)
         self.session.log.info("submit_decision: saved decision")
 
-        await step_scenario(self.scenario.pk, role.pk)
+        await step_scenario(self.scenario.pk)
         self.session.log.info("submit_decision: stepped scenario")
 
 
